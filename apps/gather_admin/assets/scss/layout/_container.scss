@@ -1,0 +1,48 @@
+// ==========================================================================
+// Layout : Container (layout/_container.scss)
+// --------------------------------------------------------------------------
+// .container suit la largeur maximale de chaque breakpoint.
+// .container-{bp} reste fluide jusqu'à {bp}, puis suit .container.
+// ==========================================================================
+
+@use 'sass:map';
+@use 'sass:list';
+@use '../abstracts' as *;
+
+$_breakpoint-keys: map.keys($breakpoints);
+
+.container,
+.container-fluid {
+  --container-gutter: var(--ds-space-4);
+
+  inline-size: 100%;
+  margin-inline: auto;
+  padding-inline: var(--container-gutter);
+}
+
+@each $key in $_breakpoint-keys {
+  .container-#{$key} {
+    --container-gutter: var(--ds-space-4);
+
+    inline-size: 100%;
+    margin-inline: auto;
+    padding-inline: var(--container-gutter);
+  }
+}
+
+// À chaque breakpoint, .container et tous les .container-{bp} dont le seuil
+// est atteint prennent la largeur maximale du palier
+@each $key, $width in $breakpoints {
+  $index: list.index($_breakpoint-keys, $key);
+  $selectors: ('.container');
+
+  @for $i from 1 through $index {
+    $selectors: list.append($selectors, '.container-#{list.nth($_breakpoint-keys, $i)}', $separator: comma);
+  }
+
+  @include media-up($key) {
+    #{$selectors} {
+      max-inline-size: var(--ds-container-#{$key});
+    }
+  }
+}

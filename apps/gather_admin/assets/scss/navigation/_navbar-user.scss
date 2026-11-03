@@ -1,0 +1,223 @@
+// ==========================================================================
+// Component: Navbar User (navigation/_navbar-user.scss)
+// --------------------------------------------------------------------------
+// Déclencheur du menu utilisateur (avatar + nom), menu déroulant du compte
+// et cloche de notification.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+// --------------------------------------------------------------------------
+// Déclencheur : pleine largeur sur mobile, pilule ajustée sur desktop
+// --------------------------------------------------------------------------
+.navbar-user-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  inline-size: 100%;
+  padding: var(--ds-space-2);
+  border: none;
+  border-radius: var(--ds-radius-md);
+  background-color: transparent;
+  color: var(--ds-color-on-surface);
+  cursor: pointer;
+  transition: effects(background-color);
+
+  &:hover {
+    background-color: state-layer(transparent, currentColor);
+  }
+
+  &:active {
+    background-color: state-layer(transparent, currentColor, 'pressed');
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  @include media-up(lg) {
+    inline-size: auto;
+    padding: var(--ds-space-1);
+    border-radius: var(--ds-radius-md);
+  }
+}
+
+// Nom et rôle : visibles sur desktop uniquement
+.user-info {
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: var(--ds-line-height-tight);
+
+  @include media-up(lg) {
+    display: flex;
+  }
+}
+
+.user-name {
+  color: var(--ds-color-on-surface);
+  @include type(label, lg);
+}
+
+.user-role {
+  color: var(--ds-color-on-surface-variant);
+  @include type(body, sm);
+}
+
+.user-chevron {
+  margin-inline-start: var(--ds-space-1);
+  color: var(--ds-color-on-surface-variant);
+  font-size: var(--ds-icon-size-md);
+  transition: spatial(transform);
+
+  .navbar-user-trigger[aria-expanded='true'] & {
+    transform: rotate(180deg);
+  }
+
+  @include reduced-motion {
+    transition: none;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Menu du compte : surcharge des Component Tokens de .dropdown-menu
+// --------------------------------------------------------------------------
+.auth-dropdown-menu {
+  --dropdown-width: var(--ds-size-menu-lg);
+  --dropdown-caret-size: var(--ds-space-3);
+
+  inline-size: var(--dropdown-width);
+  box-shadow: var(--ds-shadow-lg);
+
+  // Petite flèche pointant vers l'avatar
+  &::before {
+    content: '';
+    position: absolute;
+    inset-block-start: calc(var(--dropdown-caret-size) / -2);
+    inset-inline-end: var(--ds-space-6);
+    inline-size: var(--dropdown-caret-size);
+    block-size: var(--dropdown-caret-size);
+    border-radius: var(--ds-radius-xs);
+    background-color: var(--dropdown-bg);
+    transform: rotate(45deg);
+  }
+}
+
+// --------------------------------------------------------------------------
+// Menu du compte complet (.navbar-dropdown) : en-tête utilisateur, groupes
+// d'items séparés, réglages (sélecteur de thème) et déconnexion.
+// S'utilise sur un .dropdown-menu, généralement avec .dropdown-menu-end.
+// --------------------------------------------------------------------------
+.navbar-dropdown {
+  --dropdown-width: var(--ds-size-menu-lg);
+  --dropdown-item-font-size: var(--ds-text-body-md);
+  --dropdown-item-font-weight: var(--ds-font-weight-regular);
+
+  inline-size: var(--dropdown-width);
+  max-block-size: none; // Le menu affiche toutes ses entrées
+  box-shadow: var(--ds-shadow-lg);
+}
+
+// En-tête : avatar, identité et action secondaire (changer de compte…)
+.navbar-dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  padding-block: var(--ds-space-2);
+  padding-inline: var(--ds-space-2) var(--ds-space-1);
+}
+
+.navbar-dropdown-user {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-inline-size: 0; // Autorise la troncature du nom
+}
+
+.navbar-dropdown-name,
+.navbar-dropdown-meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navbar-dropdown-name {
+  color: var(--ds-color-on-surface);
+  @include type(title, sm);
+}
+
+.navbar-dropdown-meta {
+  color: var(--ds-color-on-surface-variant);
+  @include type(body, sm);
+}
+
+// Bloc de réglage dans le menu (ex. sélecteur de thème)
+.navbar-dropdown-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-2);
+  padding-block: var(--ds-space-2);
+  padding-inline: var(--ds-space-2);
+}
+
+.navbar-dropdown-label {
+  color: var(--ds-color-on-surface-variant);
+  @include type(label, md);
+}
+
+// Valeur alignée à droite dans un item (ex. solde)
+.item-value {
+  margin-inline-start: auto;
+  color: var(--ds-color-on-surface);
+  font-weight: var(--ds-font-weight-bold);
+}
+
+// --------------------------------------------------------------------------
+// Cloche de notification : bouton icône de 40px, zone cliquable 44px
+// --------------------------------------------------------------------------
+.navbar-notification {
+  --notification-ring: var(--navbar-bg, var(--ds-surface-container));
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--ds-control-height-md);
+  block-size: var(--ds-control-height-md);
+  border-radius: var(--ds-radius-md);
+  color: var(--ds-color-on-surface-variant);
+  @include touch-target;
+  transition: effects(background-color, color);
+
+  &:hover {
+    background-color: state-layer(transparent, var(--ds-color-on-surface));
+    color: var(--ds-color-on-surface);
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  i {
+    font-size: var(--ds-icon-size-md);
+  }
+}
+
+.notification-badge {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--ds-space-5);
+  block-size: var(--ds-space-5);
+  padding-inline: var(--ds-space-1);
+  // L'anneau reprend le fond de la navbar pour « découper » la cloche
+  border: var(--ds-border-width-thick) solid var(--notification-ring);
+  border-radius: var(--ds-radius-full);
+  background-color: var(--ds-color-error);
+  color: var(--ds-color-on-error);
+  @include type(label, sm);
+  line-height: 1;
+}

@@ -1,0 +1,40 @@
+{% extends '@CorePhp/layout.html.twig' %}
+
+{% block content %}
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'h1',
+    content: 'Confirmez la suppression de votre compte'
+  } only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'p',
+    content: 'Bonjour <strong>' ~ (dto.recipientName|e) ~ '</strong>,'
+  } only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'p',
+    content: 'Une demande de <strong>suppression définitive</strong> de votre compte a été effectuée. Pour la confirmer, saisissez ce code dans votre espace « Mon profil » :'
+  } only %}
+
+  {% include '@CorePhp/components/_box.html.twig' with {
+    content: '<div style="font-size: 32px; font-weight: 700; letter-spacing: 8px; text-align: center; font-family: monospace; color: #991b1b;">' ~ (dto.code|e) ~ '</div>',
+    background: '#fef2f2',
+    padding: '24px',
+    radius: '12px',
+    custom_style: 'margin: 24px 0; border: 1px solid #fecaca;'
+  } only %}
+
+  {% include '@CorePhp/components/_alert.html.twig' with {
+    type: 'danger',
+    title: 'Action irréversible',
+    content: 'Votre compte, vos données et vos fichiers (avatar, médias) seront supprimés définitivement. Ce code est valable <strong>' ~ (dto.ttlMinutes|e) ~ ' minutes</strong> et ne peut être utilisé qu\'une seule fois.'
+  } only %}
+
+  {% include '@CorePhp/components/_divider.html.twig' only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'small',
+    color: '#64748b',
+    content: 'Vous n\'êtes pas à l\'origine de cette demande ? Ne communiquez ce code à personne et changez votre mot de passe : votre compte ne sera pas supprimé sans ce code.'
+  } only %}
+{% endblock %}

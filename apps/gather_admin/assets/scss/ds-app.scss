@@ -1,0 +1,33 @@
+// ==========================================================================
+// Point d'entrée propre au back-office (→ public/css/ds-app.css)
+// --------------------------------------------------------------------------
+// Chargé après ds-ui-kit.css, uniquement sur les pages qui en ont besoin.
+// ==========================================================================
+
+:root {
+  --ds-size-email-preview-mobile: 24.375rem;
+  --ds-size-email-preview-height: 45rem;
+}
+
+// Component: aperçu d'un e-mail dans une iframe, à largeur desktop ou mobile
+.email-preview-frame {
+  --email-preview-width: 100%;
+
+  display: block;
+  inline-size: var(--email-preview-width);
+  max-inline-size: 100%;
+  block-size: var(--ds-size-email-preview-height);
+  margin-inline: auto;
+  border: var(--ds-border-width) solid var(--ds-color-outline-variant);
+  border-radius: var(--ds-radius-md);
+  background-color: var(--ds-color-white);
+  transition: inline-size var(--ds-duration-spatial) var(--ds-ease-spatial);
+
+  &.is-mobile {
+    --email-preview-width: var(--ds-size-email-preview-mobile);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}

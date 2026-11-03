@@ -1,0 +1,37 @@
+{% set user = app.user %}
+{% set initials = user.username|slice(0, 1)|upper %}
+{% set role = is_granted('ROLE_ADMIN') ? 'Administrateur' : 'Modérateur' %}
+<div class="dropdown">
+  <button type="button" class="navbar-user-trigger dropdown-toggle" aria-expanded="false" data-ds-toggle="dropdown" aria-label="Menu du compte">
+    <span class="avatar avatar-sm" aria-hidden="true">{{ initials }}</span>
+    <span class="user-info">
+      <span class="user-name">{{ user.username }}</span>
+      <span class="user-role">{{ role }}</span>
+    </span>
+  </button>
+
+  <div class="dropdown-menu navbar-dropdown dropdown-menu-end">
+    <div class="navbar-dropdown-header">
+      <span class="avatar avatar-sm" aria-hidden="true">{{ initials }}</span>
+      <span class="navbar-dropdown-user">
+        <span class="navbar-dropdown-name">{{ user.email }}</span>
+        <span class="navbar-dropdown-meta">{{ role }}</span>
+      </span>
+    </div>
+    <div class="dropdown-divider"></div>
+    <div class="navbar-dropdown-section">
+      <span class="navbar-dropdown-label" id="navbar-theme-label">Thème</span>
+      <div class="segmented-control segmented-control-sm segmented-control-full" role="radiogroup" aria-labelledby="navbar-theme-label" data-ds-theme-switch>
+        <button type="button" class="segmented-control-option" role="radio" aria-checked="true" data-value="auto" aria-label="Automatique" title="Automatique"><i class="ri-computer-line"></i></button>
+        <button type="button" class="segmented-control-option" role="radio" aria-checked="false" data-value="light" aria-label="Clair" title="Thème clair"><i class="ri-sun-line"></i></button>
+        <button type="button" class="segmented-control-option" role="radio" aria-checked="false" data-value="dark" aria-label="Sombre" title="Thème sombre"><i class="ri-moon-line"></i></button>
+      </div>
+    </div>
+    <div class="dropdown-divider"></div>
+    {# La déconnexion modifie l'état : en POST avec jeton CSRF, jamais par un simple lien #}
+    <form method="post" action="{{ path('admin_logout') }}">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token('admin_logout') }}">
+      <button type="submit" class="dropdown-item"><i class="ri-logout-box-r-line"></i> Déconnexion</button>
+    </form>
+  </div>
+</div>

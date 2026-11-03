@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="layout-dashboard">
+  <div class="dashboard-overlay" data-ds-dismiss="sidebar"></div>
+
+  {% include 'fragments/_sidebar_dashboard.html.twig' %}
+
+  <div class="dashboard-main">
+    {% include 'fragments/_navbar_dashboard.html.twig' %}
+
+    <main class="dashboard-content d-flex flex-column gap-8">
+      {% include 'fragments/_flash_messages.html.twig' %}
+
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}

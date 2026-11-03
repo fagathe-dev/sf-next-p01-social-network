@@ -1,0 +1,97 @@
+// ==========================================================================
+// Component: Avatar (content/_avatar.scss)
+// --------------------------------------------------------------------------
+// Les tailles suivent les hauteurs de contrôle pour s'aligner sur les
+// boutons et champs d'une même ligne.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.avatar {
+  // 1. Component Tokens
+  --avatar-size: var(--ds-control-height-md);
+  --avatar-bg: var(--ds-color-primary-container);
+  --avatar-color: var(--ds-color-on-primary-container);
+  --avatar-font-size: var(--ds-text-label-lg);
+
+  // 2. Box Model
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--avatar-size);
+  block-size: var(--avatar-size);
+  overflow: hidden;
+  // Anneau transparent par défaut, coloré dans une pile (--avatar-ring)
+  border: var(--ds-border-width-thick) solid var(--avatar-ring, transparent);
+  border-radius: var(--ds-radius-full);
+
+  // 3. Typographie & Couleurs
+  background-color: var(--avatar-bg);
+  color: var(--avatar-color);
+  font-size: var(--avatar-font-size);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: 1;
+
+  img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+}
+
+.avatar-sm {
+  --avatar-size: var(--ds-control-height-sm);
+  --avatar-font-size: var(--ds-text-label-sm);
+}
+
+.avatar-lg {
+  --avatar-size: var(--ds-control-height-xl);
+  --avatar-font-size: var(--ds-text-title-lg);
+}
+
+// --------------------------------------------------------------------------
+// Pile d'avatars (chevauchement)
+// --------------------------------------------------------------------------
+.avatar-stack {
+  --avatar-ring: var(--ds-surface);
+  --avatar-overlap: var(--ds-space-3);
+
+  display: flex;
+  align-items: center;
+}
+
+.avatar-stack > .avatar {
+  position: relative;
+  transition: spatial(transform);
+
+  & + .avatar {
+    margin-inline-start: calc(var(--avatar-overlap) * -1);
+  }
+
+  &:hover {
+    z-index: 1;
+    transform: translateY(calc(var(--ds-space-1) * -1));
+  }
+
+  @include reduced-motion {
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+.avatar-stack-sm {
+  --avatar-overlap: var(--ds-space-2);
+}
+
+.avatar-stack-lg {
+  --avatar-overlap: var(--ds-space-4);
+}
+
+// Pastille « +X »
+.avatar-count {
+  --avatar-bg: var(--ds-surface-container);
+  --avatar-color: var(--ds-color-on-info-container);
+  --avatar-ring: var(--ds-color-info);
+}

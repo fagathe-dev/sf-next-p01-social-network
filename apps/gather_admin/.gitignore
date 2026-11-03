@@ -1,0 +1,29 @@
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###
+
+###> fagathe/core-php ###
+/logs/
+/public/uploads/
+###< fagathe/core-php ###
+
+###> npm ###
+/node_modules/
+###< npm ###
+
+###> design-system ###
+/public/css/
+/public/js/
+/node_modules/
+###< design-system ###

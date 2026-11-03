@@ -1,0 +1,73 @@
+// ==========================================================================
+// Component: Alert (feedback/_alert.scss)
+// --------------------------------------------------------------------------
+// Variantes : soft (conteneur, .alert-{rôle}, .alert-soft-{rôle}) et solid
+// (.alert-solid-{rôle}). Le JS ajoute .hide avant de retirer l'alerte.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.alert {
+  // 1. Component Tokens
+  --alert-bg: var(--ds-color-info-container);
+  --alert-color: var(--ds-color-on-info-container);
+  --alert-padding-x: var(--ds-space-4);
+
+  // 2. Box Model
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ds-space-3);
+  padding-block: var(--ds-space-4);
+  padding-inline: var(--alert-padding-x);
+  border: none;
+  border-radius: var(--ds-radius-md);
+
+  // 3. Typographie & Couleurs
+  background-color: var(--alert-bg);
+  color: var(--alert-color);
+  @include type(body, md);
+
+  // 4. Motion
+  transition: effects(opacity);
+
+  &.hide {
+    opacity: 0;
+  }
+}
+
+.alert-icon {
+  flex-shrink: 0;
+  margin-block-start: var(--ds-space-0_5); // Alignement optique sur le texte
+  font-size: var(--ds-icon-size-md);
+}
+
+.alert-content {
+  flex: 1;
+}
+
+// Alerte fermable : place réservée au bouton
+.alert-dismissible {
+  padding-inline-end: var(--ds-space-12);
+}
+
+.alert-dismissible .btn-close {
+  position: absolute;
+  inset-block-start: var(--ds-space-3);
+  inset-inline-end: var(--ds-space-3);
+  font-size: var(--ds-icon-size-md);
+}
+
+// Variantes (surcharge uniquement des Component Tokens)
+@each $role, $token in $roles {
+  .alert-#{$role},
+  .alert-soft-#{$role} {
+    --alert-bg: #{role-color($role, 'container')};
+    --alert-color: #{role-color($role, 'on-container')};
+  }
+
+  .alert-solid-#{$role} {
+    --alert-bg: #{role-color($role)};
+    --alert-color: #{role-color($role, 'on')};
+  }
+}

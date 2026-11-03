@@ -1,0 +1,195 @@
+// ==========================================================================
+// Component: Navbar (navigation/_navbar.scss)
+// --------------------------------------------------------------------------
+// Mobile : hamburger à gauche, marque, .navbar-end (avatar…) à droite ; les
+// liens sont en colonne dans un .navbar-collapse (cf. _collapse.scss) qui
+// s'ouvre sous la barre. À partir de .navbar-expand-{bp} : tout en ligne.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.navbar {
+  // 1. Component Tokens
+  --navbar-bg: var(--ds-surface);
+  --navbar-color: var(--ds-color-on-surface);
+  --navbar-py: var(--ds-space-3);
+  --navbar-px: var(--ds-space-6);
+
+  // 2. Box Model
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--ds-space-3);
+  padding-block: var(--navbar-py);
+  padding-inline: var(--navbar-px);
+  border: none;
+  border-block-end: var(--ds-border-width) solid var(--ds-color-outline-variant);
+
+  // 3. Couleurs : séparée du contenu par un filet, sans ombre
+  background-color: var(--navbar-bg);
+  color: var(--navbar-color);
+
+  @include media-down(sm) {
+    --navbar-px: var(--ds-space-2);
+  }
+}
+
+.navbar :is(.container, .container-fluid) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--ds-space-3);
+  inline-size: 100%;
+}
+
+// --------------------------------------------------------------------------
+// Marque
+// --------------------------------------------------------------------------
+// La marge automatique pousse ce qui suit à droite (hamburger ou .navbar-end)
+.navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  margin-inline-end: auto;
+  gap: var(--ds-space-2);
+  border-radius: var(--ds-radius-xs);
+  color: var(--navbar-color, var(--ds-color-on-surface));
+  @include type(title, lg);
+  font-weight: var(--ds-font-weight-semibold);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--navbar-color, var(--ds-color-on-surface));
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Bouton mobile (hamburger) : bouton icône de 48px
+// --------------------------------------------------------------------------
+.navbar-toggler {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--ds-control-height-lg);
+  block-size: var(--ds-control-height-lg);
+  padding: 0;
+  border: none;
+  border-radius: var(--ds-radius-md);
+  background-color: transparent;
+  color: var(--navbar-color, var(--ds-color-on-surface));
+  font-size: var(--ds-icon-size-lg);
+  cursor: pointer;
+  transition: effects(background-color);
+
+  &:hover {
+    background-color: state-layer(transparent, currentColor);
+  }
+
+  &:active {
+    background-color: state-layer(transparent, currentColor, 'pressed');
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Zone repliable, liens et actions
+// --------------------------------------------------------------------------
+// Le panneau repliable passe sous la barre sur mobile (ordre en dernier),
+// et reprend sa place entre la marque et .navbar-end une fois en ligne
+.navbar-collapse {
+  flex-basis: 100%;
+  flex-grow: 1;
+  order: 1;
+  // height et overflow : gérés par .collapse / .collapsing
+}
+
+// Zone toujours visible, poussée à droite (menu du compte, notifications…)
+.navbar-end {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  margin-inline-start: auto;
+}
+
+// Déclencheur du compte compact dès le mobile (pilule autour de l'avatar)
+.navbar-end .navbar-user-trigger {
+  inline-size: auto;
+  padding: var(--ds-space-1);
+  border-radius: var(--ds-radius-md);
+}
+
+.navbar-nav {
+  --nav-link-height: var(--ds-control-height-lg); // Zone de clic confortable sur mobile
+  --nav-link-active-bg: var(--ds-color-primary);
+  --nav-link-active-color: var(--ds-color-on-primary);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-2);
+  margin: 0;
+  padding: var(--ds-space-4) 0 0;
+  list-style: none;
+}
+
+.navbar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-4);
+  margin-block-start: var(--ds-space-2);
+  padding-block-start: var(--ds-space-4);
+  border-block-start: var(--ds-border-width) solid var(--ds-color-outline-variant);
+}
+
+// --------------------------------------------------------------------------
+// Desktop : .navbar-expand-{bp}
+// --------------------------------------------------------------------------
+@each $key, $value in $breakpoints {
+  @include media-up($key) {
+    .navbar-expand-#{$key} {
+      flex-wrap: nowrap;
+    }
+
+    .navbar-expand-#{$key} .navbar-toggler {
+      display: none;
+    }
+
+    // Toujours visible : écrase la hauteur posée par le JS du collapse et
+    // laisse déborder les menus déroulants
+    .navbar-expand-#{$key} .navbar-collapse {
+      display: flex !important;
+      flex-basis: auto;
+      order: 0;
+      height: auto !important;
+      overflow: visible;
+    }
+
+    .navbar-expand-#{$key} .navbar-nav {
+      --nav-link-height: var(--ds-control-height-md);
+      --nav-link-active-bg: transparent;
+      --nav-link-active-color: var(--ds-color-primary);
+      --nav-link-px: var(--ds-space-3);
+
+      flex-direction: row;
+      padding-block-start: 0;
+    }
+
+    .navbar-expand-#{$key} .navbar-actions {
+      flex-direction: row;
+      align-items: center;
+      margin-block-start: 0;
+      margin-inline-start: auto; // Pousse les actions à droite
+      padding-block-start: 0;
+      border-block-start: none;
+    }
+  }
+}

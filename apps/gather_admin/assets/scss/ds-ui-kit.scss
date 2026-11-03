@@ -1,0 +1,17 @@
+// ==========================================================================
+// DS UI Kit — point d'entrée (compilé vers public/css/ds-ui-kit.css)
+// --------------------------------------------------------------------------
+// abstracts/   outils sans sortie CSS (primitives, fonctions, mixins)
+// foundation/  polices, System Tokens, reset, typographie
+// puis les composants par domaine (mêmes catégories que templates/docs/),
+// et les utilitaires en dernier.
+// ==========================================================================
+
+@use 'foundation';
+@use 'layout';
+@use 'components';
+@use 'content';
+@use 'forms';
+@use 'navigation';
+@use 'feedback';
+@use 'utilities';

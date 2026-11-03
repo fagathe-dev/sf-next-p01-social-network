@@ -1,0 +1,49 @@
+{% extends '@CorePhp/layout.html.twig' %}
+
+{% block content %}
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'h1',
+    content: 'Confirmez votre inscription'
+  } only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'p',
+    content: 'Bonjour <strong>' ~ (dto.recipientName|e) ~ '</strong>,'
+  } only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'p',
+    content: 'Merci d\'avoir créé votre compte. Pour activer votre accès et valider votre adresse e-mail, cliquez sur le bouton ci-dessous :'
+  } only %}
+
+  {% include '@CorePhp/components/_section.html.twig' with {
+    align: 'center',
+    padding: '24px 0',
+    content: include('@CorePhp/components/_button.html.twig', {
+      url: dto.verificationUrl,
+      label: 'Valider mon compte',
+      bg_color: '#0f172b',
+      text_color: '#ffffff'
+    }, with_context = false)
+  } only %}
+
+  {% include '@CorePhp/components/_alert.html.twig' with {
+    type: 'info',
+    title: 'Validité du lien',
+    content: 'Ce lien de confirmation est valable pendant <strong>' ~ (dto.ttlHours|e) ~ ' heures</strong>.'
+  } only %}
+
+  {% include '@CorePhp/components/_divider.html.twig' only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'small',
+    color: '#64748b',
+    content: 'Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur : ' ~ (dto.verificationUrl|e)
+  } only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'small',
+    color: '#64748b',
+    content: 'Si vous n\'avez pas créé de compte, vous pouvez ignorer cet e-mail.'
+  } only %}
+{% endblock %}

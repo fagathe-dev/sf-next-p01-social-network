@@ -1,0 +1,70 @@
+// ==========================================================================
+// Utilities : Background (utilities/_background.scss)
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+// Rôles de couleur : plein, conteneur (-subtle) et dégradé
+@each $role, $token in $roles {
+  .bg-#{$role} {
+    background-color: role-color($role) !important;
+  }
+
+  .bg-#{$role}-subtle {
+    background-color: role-color($role, 'container') !important;
+  }
+
+  .bg-gradient-#{$role} {
+    background-image: linear-gradient(135deg, #{role-color($role)}, #{role-color($role, 'on-container')}) !important;
+  }
+}
+
+.bg-primary-dark {
+  background-color: var(--ds-color-on-primary-container) !important;
+}
+
+// Surfaces (hiérarchie M3)
+$_surfaces: (
+  'surface': var(--ds-surface),
+  'surface-container-low': var(--ds-surface-container-low),
+  'surface-container': var(--ds-surface-container),
+  'surface-container-high': var(--ds-surface-container-high),
+  'surface-container-highest': var(--ds-surface-container-highest),
+  'inverse-surface': var(--ds-color-inverse-surface),
+);
+
+@each $name, $value in $_surfaces {
+  .bg-#{$name} {
+    background-color: $value !important;
+  }
+}
+
+// Clair / sombre : surfaces basse et inversée
+.bg-light {
+  background-color: var(--ds-surface-container-low) !important;
+}
+
+.bg-light-subtle {
+  background-color: var(--ds-surface-container-low) !important;
+}
+
+.bg-dark {
+  background-color: var(--ds-color-inverse-surface) !important;
+}
+
+.bg-dark-subtle {
+  background-color: var(--ds-surface-container-highest) !important;
+}
+
+// Couleurs statiques
+.bg-white {
+  background-color: var(--ds-color-white) !important;
+}
+
+.bg-black {
+  background-color: var(--ds-color-black) !important;
+}
+
+.bg-transparent {
+  background-color: transparent !important;
+}

@@ -1,0 +1,86 @@
+{% extends 'layouts/dashboard.html.twig' %}
+{% import 'fragments/_macros.html.twig' as ui %}
+
+{% block title %}Ticket {{ ticket.reference }}{% endblock %}
+
+{% block content %}
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ path('admin_support_list') }}">Support</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ ticket.reference }}</li>
+    </ol>
+  </nav>
+  <h1 class="h3 mb-2 text-break">{{ ticket.subject }}</h1>
+  <div class="d-flex flex-wrap align-items-center gap-2">
+  {{ ui.statusBadge(ticket.status.value) }}
+  {{ ui.statusBadge(ticket.priority.value) }}
+  <span class="text-muted small">
+    {{ ticket.user ? '@' ~ ticket.user.username : ticket.requesterName ~ ' <' ~ ticket.guestEmail ~ '> (visiteur)' }} · {{ ui.statusLabel(ticket.category.value) }}
+    {% if ticket.assignedTo %}· assigné à @{{ ticket.assignedTo.username }}{% endif %}
+  </span>
+  </div>
+  {% if ticket.pageUrl %}
+    <p class="small mt-2 mb-0 text-break">URL concernée : <a href="{{ ticket.pageUrl }}" target="_blank" rel="noopener noreferrer nofollow">{{ ticket.pageUrl }}</a></p>
+  {% endif %}
+</div>
+
+<div class="d-flex flex-column gap-4">
+  {% for message in messages %}
+    {% if message.isInternalNote %}
+      <div class="box box-warning">
+        <h2 class="box-title">Note interne, invisible du membre</h2>
+        <p class="text-muted small">{{ message.sender ? '@' ~ message.sender.username : ticket.requesterName }} · {{ message.createdAt|date('d/m/Y H:i') }}</p>
+        <p class="text-break m-0">{{ message.content|nl2br }}</p>
+      </div>
+    {% else %}
+      <article class="card">
+        <div class="card-body">
+          <p class="text-muted small">{{ message.sender ? '@' ~ message.sender.username : ticket.requesterName }} · {{ message.createdAt|date('d/m/Y H:i') }}</p>
+          <p class="card-text text-break">{{ message.content|nl2br }}</p>
+          {% if message.attachments %}
+            <ul class="d-flex flex-wrap gap-2 m-0 p-0 list-unstyled">
+              {% for attachment in message.attachments %}
+                <li><a class="btn btn-outline btn-sm" href="{{ path('admin_support_attachment', {id: ticket.id, messageId: message.id, index: loop.index0}) }}" target="_blank" rel="noopener noreferrer"><i class="ri-attachment-2"></i> {{ attachment.name }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      </article>
+    {% endif %}
+  {% endfor %}
+</div>
+
+<form class="card" method="post" action="{{ path('admin_support_reply', {id: ticket.id}) }}">
+  <div class="card-body d-flex flex-column gap-4">
+    <h2 class="card-title mb-0">Répondre</h2>
+    <input type="hidden" name="_token" value="{{ csrf_token('ticket' ~ ticket.id) }}">
+    <div>
+      <label class="form-label" for="reply-content">Message</label>
+      <textarea class="form-control" id="reply-content" name="content" rows="5" required></textarea>
+    </div>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="reply-note" name="isInternalNote" value="1">
+      <label class="form-check-label" for="reply-note">Note interne (non envoyée au membre)</label>
+    </div>
+    <div class="row g-3 align-items-end">
+      <div class="col-12 col-sm-auto">
+        <label class="form-label" for="reply-status">Statut</label>
+        <select class="form-select" id="reply-status" name="status">
+          <option value="">Automatique</option>
+          {% for item in statuses %}<option value="{{ item.value }}">{{ ui.statusLabel(item.value) }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-12 col-sm-auto">
+        <label class="form-label" for="reply-priority">Priorité</label>
+        <select class="form-select" id="reply-priority" name="priority">
+          {% for item in priorities %}<option value="{{ item.value }}" {{ ticket.priority == item ? 'selected' }}>{{ ui.statusLabel(item.value) }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-12 col-sm-auto ms-sm-auto">
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}

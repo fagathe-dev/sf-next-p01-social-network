@@ -1,0 +1,5 @@
+framework:
+    mailer:
+        dsn: '%env(MAILER_DSN)%'
+        # Envoi direct (synchrone) : les services de gather-core traitent les erreurs de transport eux-mêmes
+        message_bus: false

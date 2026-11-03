@@ -1,0 +1,163 @@
+// ==========================================================================
+// Component: File Previewer (forms/_previewer.scss)
+// --------------------------------------------------------------------------
+// Vignettes des fichiers sélectionnés dans un input file.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+$prefix: 'file-previewer';
+
+.#{$prefix} {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-4);
+}
+
+// Vignette
+.#{$prefix}-item {
+  --previewer-size: var(--ds-size-preview);
+  --previewer-radius: var(--ds-radius-sm);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--previewer-size);
+  block-size: var(--previewer-size);
+  overflow: hidden;
+  border: var(--ds-border-width) solid var(--ds-color-outline-variant);
+  border-radius: var(--previewer-radius);
+  background-color: var(--ds-surface-container);
+  user-select: none;
+  transition:
+    effects(background-color),
+    spatial(transform);
+
+  &:hover {
+    background-color: var(--ds-surface-container-high);
+    transform: translateY(calc(var(--ds-space-0_5) * -1));
+  }
+
+  @include reduced-motion {
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+// Grand format (PDF, vidéo) : en-tête + iframe empilés
+.#{$prefix}-item-lg {
+  --previewer-size: 100%;
+
+  flex-direction: column;
+  align-items: stretch;
+  block-size: var(--ds-size-preview-lg);
+  border: none;
+  background-color: transparent;
+
+  &:hover {
+    background-color: transparent;
+    transform: none;
+  }
+}
+
+.#{$prefix}-image {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+// Icône pour les fichiers qui ne sont pas des images
+.#{$prefix}-icon {
+  color: var(--ds-color-on-surface-variant);
+  font-size: var(--ds-icon-size-xl);
+}
+
+// Bouton de suppression : visible au survol, au focus et sur écran tactile
+.#{$prefix}-remove {
+  position: absolute;
+  inset-block-start: var(--ds-space-0_5);
+  inset-inline-end: var(--ds-space-0_5);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--ds-space-5);
+  block-size: var(--ds-space-5);
+  padding: 0;
+  border: none;
+  border-radius: var(--ds-radius-sm);
+  background-color: var(--ds-color-error);
+  color: var(--ds-color-on-error);
+  font-size: var(--ds-text-body-md);
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  @include touch-target($position: null); // Déjà en position absolue
+  transition: effects(opacity, background-color);
+
+  .#{$prefix}-item:hover &,
+  &:focus-visible {
+    opacity: 1;
+  }
+
+  &:hover {
+    background-color: state-layer(var(--ds-color-error), var(--ds-color-on-error));
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  @media (hover: none) {
+    opacity: 1;
+  }
+}
+
+// Nom du fichier en surimpression
+.#{$prefix}-info {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  padding-block: var(--ds-space-0_5);
+  padding-inline: var(--ds-space-1);
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--ds-color-scrim) 60%, transparent);
+  color: var(--ds-color-on-scrim);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  @include type(label, sm);
+  pointer-events: none;
+}
+
+// En-tête des grands formats
+.#{$prefix}-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--ds-space-2);
+  border: var(--ds-border-width) solid var(--ds-color-outline-variant);
+  border-block-end: 0;
+  border-start-start-radius: var(--ds-radius-sm);
+  border-start-end-radius: var(--ds-radius-sm);
+  background-color: var(--ds-surface-container-high);
+}
+
+.#{$prefix}-iframe {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  border: 0;
+  background-color: var(--ds-surface);
+}
+
+// L'iframe qui suit un en-tête reprend les coins bas arrondis
+.#{$prefix}-header + .#{$prefix}-iframe {
+  border: var(--ds-border-width) solid var(--ds-color-outline-variant);
+  border-block-start: 0;
+  border-end-start-radius: var(--ds-radius-sm);
+  border-end-end-radius: var(--ds-radius-sm);
+}

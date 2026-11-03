@@ -1,0 +1,40 @@
+// ==========================================================================
+// Component: Gallery (content/_gallery.scss)
+// --------------------------------------------------------------------------
+// Mosaïque en colonnes CSS : 1 → 2 (sm) → 3 (md) → 4 (xl) colonnes.
+// En multi-colonnes, gap ne s'applique pas verticalement : l'espacement
+// entre items passe par leur marge de fin.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.gallery {
+  --gallery-gap: var(--ds-space-4);
+
+  column-count: 1;
+  column-gap: var(--gallery-gap);
+
+  @include media-up(sm) {
+    column-count: 2;
+  }
+
+  @include media-up(md) {
+    column-count: 3;
+  }
+
+  @include media-up(xl) {
+    column-count: 4;
+  }
+}
+
+.gallery-item {
+  margin-block-end: var(--gallery-gap, var(--ds-space-4));
+  break-inside: avoid;
+
+  img {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    border-radius: var(--ds-radius-sm);
+  }
+}

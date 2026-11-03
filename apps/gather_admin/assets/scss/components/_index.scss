@@ -1,0 +1,13 @@
+// Blocs UI autonomes. btn-close et collapse passent en premier : d'autres
+// composants (alertes, modales, navbar) s'appuient dessus.
+@forward 'btn-close';
+@forward 'collapse';
+@forward 'button';
+@forward 'badge';
+@forward 'box';
+@forward 'card';
+@forward 'accordion';
+@forward 'dropdown';
+@forward 'list-group';
+@forward 'hero';
+@forward 'jumbotron';

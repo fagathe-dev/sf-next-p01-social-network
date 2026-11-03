@@ -1,0 +1,37 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block title %}Aperçu d'e-mail{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('css/ds-app.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap align-items-end justify-content-between gap-4">
+  <div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('admin_emails_list') }}">Templates d'e-mails</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ templateName }}</li>
+      </ol>
+    </nav>
+    <h1 class="h3 mb-0">Aperçu : {{ templateName }}</h1>
+  </div>
+  <div class="d-flex flex-wrap align-items-center gap-3">
+  <div class="segmented-control" id="preview-device" role="radiogroup" aria-label="Largeur de l'aperçu">
+    <button type="button" class="segmented-control-option" role="radio" aria-checked="true" data-value="desktop"><i class="ri-computer-line"></i> Desktop</button>
+    <button type="button" class="segmented-control-option" role="radio" aria-checked="false" data-value="mobile"><i class="ri-smartphone-line"></i> Mobile</button>
+  </div>
+  <form method="post" action="{{ path('admin_emails_test', {templateName: templateName}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('email_test') }}">
+    <button type="submit" class="btn btn-soft-primary"><i class="ri-send-plane-line"></i> Envoyer un e-mail de test à {{ app.user.email }}</button>
+  </form>
+  </div>
+</div>
+
+<iframe id="preview" class="email-preview-frame" sandbox title="Aperçu de l'e-mail" src="{{ path('admin_emails_render', {templateName: templateName}) }}"></iframe>
+{% endblock %}
+
+{% block javascripts %}
+  <script type="module" src="{{ asset('js/pages/email-preview.js') }}"></script>
+{% endblock %}

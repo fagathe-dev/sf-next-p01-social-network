@@ -1,0 +1,93 @@
+// ==========================================================================
+// Component: Selectable Card (forms/_selectable-card.scss)
+// --------------------------------------------------------------------------
+// Radio ou checkbox présenté en carte : l'input est masqué, le label voisin
+// porte le style. Sélection = conteneur primaire + liseré.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.form-selectable-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-4);
+}
+
+.form-selectable-input {
+  @include visually-hidden;
+}
+
+.form-selectable-label {
+  // 1. Component Tokens
+  --selectable-bg: var(--ds-surface);
+  --selectable-color: var(--ds-color-on-surface);
+  --selectable-ring: var(--ds-color-outline-variant);
+  --selectable-radius: var(--ds-radius-md);
+
+  // 2. Box Model
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-4);
+  padding: var(--ds-space-5);
+  border: none;
+  border-radius: var(--selectable-radius);
+
+  // 3. Typographie & Couleurs
+  background-color: var(--selectable-bg);
+  // Liseré de sélection (pas une ombre de profondeur)
+  box-shadow: inset 0 0 0 var(--ds-border-width-thick) var(--selectable-ring);
+  color: var(--selectable-color);
+  font-weight: var(--ds-font-weight-medium);
+  cursor: pointer;
+
+  // 4. Motion
+  transition: effects(background-color, color, box-shadow);
+
+  // 5. États interactifs : survol = surface plus haute
+  &:hover {
+    --selectable-bg: var(--ds-surface-container-low);
+  }
+}
+
+.form-selectable-input:focus-visible + .form-selectable-label {
+  @include focus-ring;
+}
+
+.form-selectable-input:checked + .form-selectable-label {
+  --selectable-bg: var(--ds-color-primary-container);
+  --selectable-color: var(--ds-color-on-primary-container);
+  --selectable-ring: var(--ds-color-primary);
+}
+
+.form-selectable-input:disabled + .form-selectable-label {
+  cursor: not-allowed;
+  opacity: var(--ds-opacity-disabled);
+}
+
+// Icône affichée uniquement quand la carte est cochée
+.icon-check {
+  color: var(--ds-color-primary);
+  font-size: var(--ds-icon-size-md);
+  opacity: 0;
+  transform: scale(0.5);
+  transition:
+    effects(opacity),
+    spring(transform);
+}
+
+.form-selectable-input:checked + .form-selectable-label .icon-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@include reduced-motion {
+  .form-selectable-label {
+    transition: effects(background-color, color, box-shadow);
+  }
+
+  .icon-check {
+    transition: effects(opacity);
+  }
+}

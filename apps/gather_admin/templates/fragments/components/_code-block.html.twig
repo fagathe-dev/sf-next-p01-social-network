@@ -1,0 +1,53 @@
+{#
+  Composant Twig pour l'affichage de blocs de code avec copie
+  
+  Paramètres:
+  - code: Le code à afficher (string, obligatoire)
+  - language: Le langage de programmation (string, défaut: "text")
+  - title: Titre optionnel pour le bloc de code (string)
+  - copyable: Si le bouton de copie doit être affiché (boolean, défaut: true)
+  - collapsible: Si le bloc peut être réduit/développé (boolean, défaut: false)
+  - id: ID unique pour le bloc (string, auto-généré si non fourni)
+#}
+
+{% set codeId = id|default('code-' ~ random()) %}
+{% set language = language|default('text') %}
+{% set copyable = copyable is not defined ? true : copyable %}
+{% set collapsible = collapsible|default(false) %}
+
+<div class="code-block" data-language="{{ language }}">
+  <div class="code-header">
+    <div class="d-flex align-items-center gap-3">
+      <span class="code-language">{{ language|upper }}</span>
+      {% if title is defined %}
+        <span class="code-title">{{ title }}</span>
+      {% endif %}
+    </div>
+    
+    <div class="code-actions">
+      {% if collapsible %}
+        <button class="btn btn-sm btn-ghost-secondary code-expand-btn"
+                data-ds-toggle="collapse"
+                data-ds-target="#{{ codeId }}-wrapper"
+                aria-expanded="true">
+          <i class="ri-arrow-down-s-line"></i>
+          <span class="d-none d-sm-inline ms-1">Réduire</span>
+        </button>
+      {% endif %}
+      
+      {% if copyable %}
+        <button class="btn btn-sm btn-ghost-secondary btn-copy-code" 
+                data-copy-target="{{ codeId }}" 
+                title="Copier le code">
+          <i class="ri-clipboard-line"></i>
+          <span class="d-none d-sm-inline ms-1">Copier</span>
+        </button>
+      {% endif %}
+    </div>
+  </div>
+  
+  <div id="{{ codeId }}-wrapper" class="collapse show">
+    {# C'est ici que la magie opère : on utilise |e('html') à la place de |raw #}
+    <pre class="code-content m-0"><code id="{{ codeId }}" class="language-{{ language }}">{{ code|trim|e('html') }}</code></pre>
+  </div>
+</div>

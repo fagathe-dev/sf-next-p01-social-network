@@ -1,0 +1,97 @@
+// ==========================================================================
+// Component: Toast (feedback/_toast.scss)
+// --------------------------------------------------------------------------
+// Le JS crée #toast-container, ajoute .show après insertion puis .hide avant
+// de retirer le toast (300ms plus tard) : les transitions restent plus
+// courtes que ce délai.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+// Pile de toasts en bas à droite, espacés par gap
+#toast-container {
+  position: fixed;
+  inset-block-end: var(--ds-space-4);
+  inset-inline-end: var(--ds-space-4);
+  z-index: var(--ds-z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-2);
+  inline-size: min(100% - 2 * var(--ds-space-4), var(--ds-size-toast));
+}
+
+.toast {
+  // 1. Component Tokens
+  --toast-bg: var(--ds-surface);
+  --toast-color: var(--ds-color-on-surface);
+  --toast-icon-color: var(--ds-color-on-surface-variant);
+
+  // 2. Box Model
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  padding-block: var(--ds-space-4);
+  padding-inline: var(--ds-space-4) var(--ds-space-2);
+  border: var(--ds-border-width) solid var(--ds-color-outline-variant);
+  border-radius: var(--ds-radius-md);
+
+  // 3. Couleurs : flotte au-dessus du contenu, d'où l'ombre
+  background-color: var(--toast-bg);
+  color: var(--toast-color);
+  box-shadow: var(--ds-shadow-md);
+  @include type(body, md);
+
+  // 4. Motion : entre et sort par la droite
+  opacity: 0;
+  transform: translateX(calc(100% + var(--ds-space-4)));
+  transition:
+    effects(opacity),
+    spatial(transform);
+
+  &.show {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  &.hide {
+    opacity: 0;
+    transform: translateX(calc(100% + var(--ds-space-4)));
+  }
+
+  @include reduced-motion {
+    transform: none;
+    transition: effects(opacity);
+
+    &.hide {
+      transform: none;
+    }
+  }
+}
+
+// Types : seule l'icône prend la couleur du rôle
+$_toast-types: (
+  'success': 'success',
+  'error': 'danger',
+  'info': 'info',
+  'warning': 'warning',
+);
+
+@each $type, $role in $_toast-types {
+  .toast-#{$type} {
+    --toast-icon-color: #{role-color($role)};
+  }
+}
+
+.toast-icon {
+  flex-shrink: 0;
+  color: var(--toast-icon-color);
+  font-size: var(--ds-icon-size-md);
+}
+
+.toast-body {
+  flex: 1;
+}
+
+.toast .btn-close {
+  font-size: var(--ds-icon-size-md);
+}

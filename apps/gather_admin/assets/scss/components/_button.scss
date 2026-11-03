@@ -1,0 +1,147 @@
+// ==========================================================================
+// Component: Button (components/_button.scss)
+// --------------------------------------------------------------------------
+// Variantes : solid (.btn-{rôle}, .btn-solid-{rôle}), soft, outline, ghost
+// pour les rôles primary, secondary, tertiary, success, warning, info, danger.
+// Style inspiré de Flowbite : rayon de base (--ds-radius-md), ombre très
+// légère ; .btn-pill pour une pilule.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.btn {
+  // 1. Component Tokens (mappés sur les System Tokens)
+  --btn-bg: var(--ds-color-primary);
+  --btn-color: var(--ds-color-on-primary);
+  --btn-border-color: transparent;
+  --btn-radius: var(--ds-radius-md);
+  --btn-shadow: var(--ds-shadow-xs);
+  --btn-height: var(--ds-control-height-md);
+  --btn-px: var(--ds-space-5);
+  --btn-gap: var(--ds-space-2);
+  --btn-font-size: var(--ds-text-label-lg);
+
+  // 2. Box Model & Layout (zéro marge externe)
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--btn-gap);
+  block-size: var(--btn-height);
+  padding-block: 0;
+  padding-inline: var(--btn-px);
+  border: var(--ds-border-width) solid var(--btn-border-color);
+  border-radius: var(--btn-radius);
+
+  // 3. Typographie & Couleurs
+  background-color: var(--btn-bg);
+  color: var(--btn-color);
+  box-shadow: var(--btn-shadow);
+  font-family: var(--ds-font-sans);
+  font-size: var(--btn-font-size);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: 1;
+  letter-spacing: var(--ds-letter-spacing-label);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+
+  // 4. Motion
+  transition: effects(background-color, color, border-color);
+
+  // 5. États interactifs (State Layers)
+  &:hover:not(:disabled) {
+    background-color: state-layer(var(--btn-bg), var(--btn-color));
+    color: var(--btn-color);
+    text-decoration: none;
+  }
+
+  &:active:not(:disabled) {
+    background-color: state-layer(var(--btn-bg), var(--btn-color), 'pressed');
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &:disabled,
+  &.disabled,
+  &[aria-disabled='true'] {
+    background-color: disabled-container();
+    color: disabled-content();
+    border-color: transparent;
+    box-shadow: none;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Tailles
+// --------------------------------------------------------------------------
+.btn-sm {
+  --btn-height: var(--ds-control-height-sm);
+  --btn-px: var(--ds-space-3);
+  --btn-radius: var(--ds-radius-sm);
+  --btn-font-size: var(--ds-text-label-md);
+
+  @include touch-target;
+}
+
+.btn-lg {
+  --btn-height: var(--ds-control-height-lg);
+  --btn-px: var(--ds-space-6);
+  --btn-font-size: var(--ds-text-body-lg);
+}
+
+// Forme pilule, pour un appel à l'action qui doit ressortir
+.btn-pill {
+  --btn-radius: var(--ds-radius-full);
+}
+
+// Bouton icône carré
+.btn-icon {
+  --btn-px: 0;
+
+  inline-size: var(--btn-height);
+
+  :is(i, [class^='mdi-'], [class^='bx-'], [class^='ri-'], [class^='la-']) {
+    margin: 0;
+    font-size: var(--ds-icon-size-md);
+  }
+}
+
+// --------------------------------------------------------------------------
+// Variantes (surcharge uniquement des Component Tokens)
+// --------------------------------------------------------------------------
+@each $role, $token in $roles {
+  .btn-soft-#{$role} {
+    --btn-bg: #{role-color($role, 'container')};
+    --btn-color: #{role-color($role, 'on-container')};
+  }
+
+  .btn-outline-#{$role} {
+    --btn-bg: transparent;
+    --btn-color: #{role-color($role)};
+    --btn-border-color: var(--ds-color-outline);
+  }
+
+  .btn-ghost-#{$role} {
+    --btn-bg: transparent;
+    --btn-shadow: none;
+    --btn-color: #{role-color($role)};
+  }
+}
+
+// Variantes pleines en dernier, success et danger à la fin : core-ts
+// (copyWithButtonFeedback) ajoute .btn-success ou .btn-danger à un bouton qui
+// porte déjà une variante, et ce retour visuel doit toujours l'emporter.
+$_solid-order: ('primary', 'secondary', 'tertiary', 'warning', 'info', 'success', 'danger');
+
+@each $role in $_solid-order {
+  .btn-#{$role},
+  .btn-solid-#{$role} {
+    --btn-bg: #{role-color($role)};
+    --btn-color: #{role-color($role, 'on')};
+  }
+}

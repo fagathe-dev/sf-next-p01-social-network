@@ -1,0 +1,71 @@
+// ==========================================================================
+// Utilities : Border & Radius (utilities/_border.scss)
+// ==========================================================================
+
+@use 'sass:map';
+@use '../abstracts' as *;
+
+// Bordure décorative par défaut (séparateur)
+.border {
+  border: var(--ds-border-width) solid var(--ds-color-outline-variant) !important;
+}
+
+.border-0 {
+  border: 0 !important;
+}
+
+$_sides: (
+  'top': 'block-start',
+  'end': 'inline-end',
+  'bottom': 'block-end',
+  'start': 'inline-start',
+);
+
+@each $side, $logical in $_sides {
+  .border-#{$side} {
+    border-#{$logical}: var(--ds-border-width) solid var(--ds-color-outline-variant) !important;
+  }
+
+  .border-#{$side}-0 {
+    border-#{$logical}: 0 !important;
+  }
+}
+
+.border-2 {
+  border-width: var(--ds-border-width-thick) !important;
+}
+
+.border-dashed {
+  border-style: dashed !important;
+}
+
+// Couleurs : bordure fonctionnelle (>= 3:1) et rôles
+.border-outline {
+  border-color: var(--ds-color-outline) !important;
+}
+
+@each $role, $token in $roles {
+  .border-#{$role} {
+    border-color: role-color($role) !important;
+  }
+}
+
+// Rayons
+@each $name, $value in $radii {
+  .rounded-#{$name} {
+    border-radius: var(--ds-radius-#{$name}) !important;
+  }
+}
+
+.rounded {
+  border-radius: var(--ds-radius-sm) !important;
+}
+
+.rounded-0 {
+  border-radius: 0 !important;
+}
+
+.rounded-pill,
+.rounded-circle {
+  border-radius: var(--ds-radius-full) !important;
+}

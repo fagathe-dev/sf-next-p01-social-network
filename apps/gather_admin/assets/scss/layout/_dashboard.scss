@@ -1,0 +1,114 @@
+// ==========================================================================
+// Layout : Dashboard — admin (layout/_dashboard.scss)
+// --------------------------------------------------------------------------
+// Sidebar fixe à gauche (tiroir sous lg), contenu défilant à droite.
+// Les éléments .sidebar-* sont stylés par navigation/_sidebar.scss.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.layout-dashboard {
+  display: flex;
+  block-size: 100vh;
+  block-size: 100dvh;
+  overflow: hidden;
+  background-color: var(--ds-surface);
+}
+
+// --------------------------------------------------------------------------
+// Sidebar : séparée du contenu par sa surface (containment), pas d'ombre
+// --------------------------------------------------------------------------
+.dashboard-sidebar {
+  --sidebar-header-height: var(--ds-size-topbar);
+  --sidebar-padding: var(--ds-space-4);
+
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  inline-size: var(--ds-size-sidebar);
+  z-index: var(--ds-z-drawer);
+  background-color: var(--ds-surface-container);
+  transition: spatial(transform);
+
+  // Tiroir flottant sous lg : il passe au-dessus du contenu, d'où l'ombre.
+  // Fermé, il est masqué après la translation (liens hors tabulation).
+  @include media-down(lg) {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    visibility: hidden;
+    transform: translateX(-100%);
+    transition:
+      spatial(transform),
+      visibility 0s linear var(--ds-duration-spatial);
+
+    &.is-open {
+      visibility: visible;
+      transform: translateX(0);
+      box-shadow: var(--ds-shadow-lg);
+      transition: spatial(transform);
+    }
+  }
+
+  @include reduced-motion {
+    &,
+    &.is-open {
+      transition: none;
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// Zone principale
+// --------------------------------------------------------------------------
+.dashboard-main {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-inline-size: 0; // Empêche les grilles enfants de déborder
+}
+
+.dashboard-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-2);
+  block-size: var(--ds-size-topbar);
+  padding-inline: var(--ds-space-8);
+}
+
+.header-search {
+  inline-size: 100%;
+  max-inline-size: var(--ds-size-search);
+}
+
+.dashboard-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-block-end: var(--ds-space-8);
+  padding-inline: var(--ds-space-8);
+}
+
+// Voile du tiroir mobile
+.dashboard-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ds-z-overlay);
+  display: none;
+  background-color: color-mix(in srgb, var(--ds-color-scrim) 40%, transparent);
+  backdrop-filter: blur(var(--ds-space-0_5));
+
+  &.is-visible {
+    display: block;
+  }
+}
+
+// Sur desktop, la sidebar du dashboard est toujours affichée : pas de voile,
+// même si le tiroir est resté ouvert pendant un redimensionnement
+@include media-up(lg) {
+  .layout-dashboard .dashboard-overlay {
+    display: none;
+  }
+}

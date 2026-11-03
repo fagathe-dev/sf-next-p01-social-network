@@ -1,0 +1,32 @@
+{% extends '@CorePhp/layout.html.twig' %}
+
+{% block content %}
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'h1',
+    content: 'Votre demande ' ~ (dto.reference|e)
+  } only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'p',
+    content: 'Bonjour <strong>' ~ (dto.recipientName|e) ~ '</strong>, l\'équipe support a répondu à « ' ~ (dto.subject|e) ~ ' » :'
+  } only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'p',
+    color: '#525266',
+    content: (dto.excerpt|e)
+  } only %}
+
+  {% if dto.ticketUrl %}
+  {% include '@CorePhp/components/_section.html.twig' with {
+    align: 'center',
+    padding: '24px 0',
+    content: include('@CorePhp/components/_button.html.twig', {
+      url: dto.ticketUrl,
+      label: 'Voir le ticket',
+      bg_color: '#4B3FD8',
+      text_color: '#ffffff'
+    }, with_context = false)
+  } only %}
+  {% endif %}
+{% endblock %}

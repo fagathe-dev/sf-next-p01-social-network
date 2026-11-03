@@ -1,0 +1,102 @@
+// ==========================================================================
+// Component: Pagination (navigation/_pagination.scss)
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.pagination {
+  // 1. Component Tokens
+  --page-link-size: var(--ds-control-height-md);
+  --page-link-font-size: var(--ds-text-label-lg);
+
+  // 2. Box Model : les pages sont jointes, les bordures se recouvrent
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page-item {
+  display: inline-flex;
+}
+
+.page-item + .page-item {
+  margin-inline-start: calc(var(--ds-border-width) * -1);
+}
+
+.page-link {
+  --page-link-bg: var(--ds-surface);
+  --page-link-color: var(--ds-color-on-surface-variant);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--page-link-size, var(--ds-control-height-md));
+  block-size: var(--page-link-size, var(--ds-control-height-md));
+  padding-inline: var(--ds-space-2);
+  border: var(--ds-border-width) solid var(--ds-color-outline-variant);
+  background-color: var(--page-link-bg);
+  color: var(--page-link-color);
+  font-size: var(--page-link-font-size, var(--ds-text-label-lg));
+  font-weight: var(--ds-font-weight-medium);
+  line-height: 1;
+  text-decoration: none;
+  transition: effects(background-color, color);
+
+  &:hover {
+    background-color: state-layer(var(--page-link-bg), var(--page-link-color));
+    color: var(--page-link-color);
+    text-decoration: none;
+  }
+
+  &:active {
+    background-color: state-layer(var(--page-link-bg), var(--page-link-color), 'pressed');
+  }
+
+  &:focus-visible {
+    z-index: 1;
+
+    @include focus-ring;
+  }
+}
+
+.page-item:first-child .page-link {
+  border-start-start-radius: var(--ds-radius-md);
+  border-end-start-radius: var(--ds-radius-md);
+}
+
+.page-item:last-child .page-link {
+  border-start-end-radius: var(--ds-radius-md);
+  border-end-end-radius: var(--ds-radius-md);
+}
+
+.page-item.active .page-link {
+  --page-link-bg: var(--ds-color-primary-container);
+  --page-link-color: var(--ds-color-on-primary-container);
+}
+
+.page-item.disabled .page-link {
+  color: disabled-content();
+  pointer-events: none;
+}
+
+// --------------------------------------------------------------------------
+// Tailles
+// --------------------------------------------------------------------------
+.pagination-lg {
+  --page-link-size: var(--ds-control-height-lg);
+  --page-link-font-size: var(--ds-text-body-lg);
+}
+
+.pagination-sm {
+  --page-link-size: var(--ds-control-height-sm);
+  --page-link-font-size: var(--ds-text-label-md);
+}
+
+.pagination-sm .page-link {
+  @include touch-target;
+}

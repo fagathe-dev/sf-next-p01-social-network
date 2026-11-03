@@ -1,0 +1,89 @@
+// ==========================================================================
+// Component: Chip (forms/_chip.scss)
+// --------------------------------------------------------------------------
+// Chip de filtre : de 32px (zone cliquable étendue à 44px). Sélection
+// via .is-selected ou aria-selected="true",.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.chip {
+  // 1. Component Tokens
+  --chip-bg: var(--ds-color-primary-container);
+  --chip-color: var(--ds-color-on-primary-container);
+  --chip-selected-bg: var(--ds-color-primary);
+  --chip-selected-color: var(--ds-color-on-primary);
+  --chip-border-color: transparent;
+  --chip-radius: var(--ds-radius-sm);
+
+  // 2. Box Model
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-1_5);
+  block-size: var(--ds-control-height-sm);
+  padding-inline: var(--ds-space-3);
+  border: var(--ds-border-width) solid var(--chip-border-color);
+  border-radius: var(--chip-radius);
+  @include touch-target;
+
+  // 3. Typographie & Couleurs
+  background-color: var(--chip-bg);
+  color: var(--chip-color);
+  @include type(label, lg);
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+
+  // 4. Motion
+  transition: effects(background-color, color, border-color);
+
+  // 5. États interactifs
+  &:hover {
+    background-color: state-layer(var(--chip-bg), var(--chip-color));
+  }
+
+  &:active {
+    background-color: state-layer(var(--chip-bg), var(--chip-color), 'pressed');
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &.is-selected,
+  &[aria-selected='true'] {
+    --chip-bg: var(--chip-selected-bg);
+    --chip-color: var(--chip-selected-color);
+  }
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    background-color: disabled-container();
+    color: disabled-content();
+    pointer-events: none;
+  }
+
+
+  &:is(a) {
+    text-decoration: none;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+// Forme pilule
+.chip-pill {
+  --chip-radius: var(--ds-radius-full);
+}
+
+// Variantes (surcharge uniquement des Component Tokens)
+@each $role, $token in $roles {
+  .chip-#{$role} {
+    --chip-bg: #{role-color($role, 'container')};
+    --chip-color: #{role-color($role, 'on-container')};
+    --chip-selected-bg: #{role-color($role)};
+    --chip-selected-color: #{role-color($role, 'on')};
+    --chip-border-color: var(--ds-color-outline);
+  }
+}

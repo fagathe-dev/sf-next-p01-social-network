@@ -1,0 +1,15 @@
+// Classes utilitaires (toutes en !important) : chargées en dernier
+@forward 'background';
+@forward 'shadow';
+@forward 'border';
+@forward 'display';
+@forward 'flex';
+@forward 'gap';
+@forward 'grid';
+@forward 'columns';
+@forward 'sizing';
+@forward 'icons';
+@forward 'link';
+@forward 'object-fit';
+@forward 'spacing';
+@forward 'text';

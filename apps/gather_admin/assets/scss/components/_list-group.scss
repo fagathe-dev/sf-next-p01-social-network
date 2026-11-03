@@ -1,0 +1,113 @@
+// ==========================================================================
+// Component: List Group (components/_list-group.scss)
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.list-group {
+  // 1. Component Tokens
+  --list-group-bg: var(--ds-surface);
+  --list-group-color: var(--ds-color-on-surface);
+  --list-group-divider-color: var(--ds-color-outline-variant);
+  --list-group-radius: var(--ds-radius-md);
+
+  // 2. Box Model
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; // Garde les items dans l'arrondi
+  list-style: none;
+  border: var(--ds-border-width) solid var(--list-group-divider-color);
+  border-radius: var(--list-group-radius);
+
+  // 3. Couleurs
+  background-color: var(--list-group-bg);
+  color: var(--list-group-color);
+}
+
+.list-group-item {
+  // 1. Component Tokens
+  --list-group-item-bg: transparent;
+  --list-group-item-color: var(--list-group-color, var(--ds-color-on-surface));
+
+  // 2. Box Model
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--ds-space-3);
+  padding-block: var(--ds-space-2_5);
+  padding-inline: var(--ds-space-4);
+  border: none;
+
+  // 3. Typographie & Couleurs
+  background-color: var(--list-group-item-bg);
+  color: var(--list-group-item-color);
+  @include type(body, md);
+  transition: effects(background-color, color);
+
+  & + & {
+    border-block-start: var(--ds-border-width) solid var(--list-group-divider-color, var(--ds-color-outline-variant));
+  }
+
+  &.active {
+    --list-group-item-bg: var(--ds-color-primary-container);
+    --list-group-item-color: var(--ds-color-on-primary-container);
+
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  &.disabled,
+  &:disabled,
+  &[aria-disabled='true'] {
+    --list-group-item-color: #{disabled-content()};
+
+    pointer-events: none;
+  }
+}
+
+// Items interactifs (liens et boutons)
+.list-group-item:is(a, button) {
+  inline-size: 100%;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: state-layer(var(--list-group-item-bg), var(--list-group-item-color));
+    color: var(--list-group-item-color);
+    text-decoration: none;
+  }
+
+  &:active {
+    background-color: state-layer(var(--list-group-item-bg), var(--list-group-item-color), 'pressed');
+  }
+
+  &:focus-visible {
+    @include focus-ring(calc(var(--ds-focus-ring-width) * -1));
+  }
+}
+
+// Variante affleurante (dans un widget latéral)
+.list-group-flush {
+  --list-group-bg: transparent;
+  --list-group-radius: 0;
+
+  border: 0;
+}
+
+// Variante numérotée
+.list-group-numbered {
+  counter-reset: list-counter;
+}
+
+.list-group-numbered > .list-group-item {
+  counter-increment: list-counter;
+
+  &::before {
+    content: counter(list-counter) '.';
+    flex-shrink: 0;
+    color: var(--ds-color-on-surface-variant);
+    font-weight: var(--ds-font-weight-semibold);
+  }
+}

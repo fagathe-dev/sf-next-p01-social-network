@@ -1,0 +1,149 @@
+// ==========================================================================
+// Component: Form Control (forms/_form-control.scss)
+// --------------------------------------------------------------------------
+// Champs texte, textarea, select et input file. Champ "outlined" M3 :
+// bordure fonctionnelle --ds-color-outline (>= 3:1 sur toutes les surfaces).
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.form-label {
+  display: inline-block;
+  padding-block-end: var(--ds-space-1_5);
+  color: var(--ds-color-on-surface);
+  @include type(label, lg);
+}
+
+.form-control,
+.form-select {
+  // 1. Component Tokens
+  --input-bg: var(--ds-surface-container-low);
+  --input-color: var(--ds-color-on-surface);
+  --input-border-color: var(--ds-color-outline);
+  --input-radius: var(--ds-radius-md);
+  --input-height: var(--ds-control-height-md);
+  --input-px: var(--ds-space-3);
+  --input-py: var(--ds-space-2);
+  --input-font-size: var(--ds-text-body-md);
+  --input-shadow: var(--ds-shadow-xs);
+
+  // 2. Box Model
+  display: block;
+  inline-size: 100%;
+  min-block-size: var(--input-height);
+  padding-block: var(--input-py);
+  padding-inline: var(--input-px);
+  border: var(--ds-border-width) solid var(--input-border-color);
+  border-radius: var(--input-radius);
+  appearance: none;
+  background-clip: padding-box;
+
+  // 3. Typographie & Couleurs
+  background-color: var(--input-bg);
+  color: var(--input-color);
+  box-shadow: var(--input-shadow);
+  font-family: inherit;
+  font-size: var(--input-font-size);
+  font-weight: var(--ds-font-weight-regular);
+  line-height: var(--ds-line-height-body);
+
+  // 4. Motion
+  transition: effects(border-color, background-color);
+
+  // 5. États interactifs
+  &::placeholder {
+    color: var(--ds-color-on-surface-variant);
+    opacity: 1;
+  }
+
+  // :where() garde la spécificité basse : les états de validation priment
+  &:hover:where(:not(:disabled, [readonly])) {
+    --input-border-color: var(--ds-color-on-surface);
+  }
+
+  &:focus-visible {
+    --input-border-color: var(--ds-focus-ring-color);
+
+    @include focus-ring;
+  }
+
+  &:disabled,
+  &[readonly] {
+    --input-bg: #{disabled-container()};
+    --input-color: #{disabled-content()};
+    --input-border-color: #{disabled-content()};
+    --input-shadow: none;
+
+    cursor: not-allowed;
+  }
+}
+
+textarea.form-control {
+  min-block-size: var(--ds-space-24);
+  resize: vertical;
+}
+
+// --------------------------------------------------------------------------
+// Tailles
+// --------------------------------------------------------------------------
+.form-control-sm,
+.form-select-sm {
+  --input-height: var(--ds-control-height-sm);
+  --input-px: var(--ds-space-3);
+  --input-py: var(--ds-space-1);
+  --input-font-size: var(--ds-text-body-md);
+  --input-radius: var(--ds-radius-sm);
+}
+
+.form-control-lg,
+.form-select-lg {
+  --input-height: var(--ds-control-height-lg);
+  --input-px: var(--ds-space-5);
+  --input-py: var(--ds-space-3);
+  --input-font-size: var(--ds-text-body-lg);
+}
+
+// --------------------------------------------------------------------------
+// Select : chevron dessiné en dégradés, il suit la couleur du thème
+// --------------------------------------------------------------------------
+.form-select {
+  --select-indicator-color: var(--ds-color-on-surface-variant);
+  --select-indicator-size: var(--ds-space-1_5);
+  --select-indicator-end: var(--ds-space-5);
+
+  padding-inline-end: var(--ds-space-10);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--select-indicator-color) 50%),
+    linear-gradient(135deg, var(--select-indicator-color) 50%, transparent 50%);
+  background-position:
+    calc(100% - var(--select-indicator-end) - var(--select-indicator-size)) 50%,
+    calc(100% - var(--select-indicator-end)) 50%;
+  background-repeat: no-repeat;
+  background-size: var(--select-indicator-size) var(--select-indicator-size);
+}
+
+// --------------------------------------------------------------------------
+// Input file
+// --------------------------------------------------------------------------
+input[type='file'].form-control {
+  padding: 0;
+  overflow: hidden;
+
+  &::file-selector-button {
+    margin-inline-end: var(--ds-space-4);
+    padding-block: var(--ds-space-2);
+    padding-inline: var(--ds-space-4);
+    border: none;
+    border-inline-end: var(--ds-border-width) solid var(--ds-color-outline-variant);
+    background-color: var(--ds-surface-container-high);
+    color: var(--ds-color-on-surface);
+    font: inherit;
+    font-weight: var(--ds-font-weight-medium);
+    cursor: pointer;
+    transition: effects(background-color);
+  }
+
+  &:hover:not(:disabled)::file-selector-button {
+    background-color: var(--ds-surface-container-highest);
+  }
+}

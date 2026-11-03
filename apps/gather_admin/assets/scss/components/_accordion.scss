@@ -1,0 +1,94 @@
+// ==========================================================================
+// Component: Accordion (components/_accordion.scss)
+// --------------------------------------------------------------------------
+// L'ouverture est pilotée en JS (data-ds-toggle="accordion") : le bouton
+// reçoit aria-expanded, le panneau .accordion-collapse reçoit .show.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.accordion {
+  // 1. Component Tokens
+  --accordion-bg: var(--ds-surface);
+  --accordion-color: var(--ds-color-on-surface);
+  --accordion-divider-color: var(--ds-color-outline-variant);
+  --accordion-px: var(--ds-space-5);
+  --accordion-py: var(--ds-space-4);
+
+  // 2. Box Model
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; // Garde les enfants dans l'arrondi
+  border: var(--ds-border-width) solid var(--accordion-divider-color);
+  border-radius: var(--ds-radius-md);
+
+  // 3. Couleurs
+  background-color: var(--accordion-bg);
+  color: var(--accordion-color);
+  box-shadow: var(--ds-shadow-xs);
+}
+
+.accordion-item + .accordion-item {
+  border-block-start: var(--ds-border-width) solid var(--accordion-divider-color);
+}
+
+.accordion-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-4);
+  inline-size: 100%;
+  padding-block: var(--accordion-py);
+  padding-inline: var(--accordion-px);
+  border: none;
+  background-color: transparent;
+  color: var(--accordion-color);
+  text-align: start;
+  @include type(label, lg);
+  font-weight: var(--ds-font-weight-medium);
+  cursor: pointer;
+  transition: effects(background-color);
+
+  &:hover {
+    background-color: state-layer(transparent, var(--accordion-color));
+  }
+
+  &:active {
+    background-color: state-layer(transparent, var(--accordion-color), 'pressed');
+  }
+
+  // Focus à l'intérieur pour ne pas être rogné par l'arrondi du parent
+  &:focus-visible {
+    @include focus-ring(calc(var(--ds-focus-ring-width) * -1));
+  }
+}
+
+.accordion-icon {
+  flex-shrink: 0;
+  color: var(--ds-color-on-surface-variant);
+  font-size: var(--ds-icon-size-md);
+  transition: spatial(transform);
+
+  .accordion-button[aria-expanded='true'] & {
+    transform: rotate(180deg);
+  }
+
+  @include reduced-motion {
+    transition: none;
+  }
+}
+
+.accordion-collapse {
+  display: none;
+
+  &.show {
+    display: block;
+  }
+}
+
+.accordion-body {
+  padding-block: 0 var(--accordion-py);
+  padding-inline: var(--accordion-px);
+  color: var(--ds-color-on-surface-variant);
+  @include type(body, md);
+}

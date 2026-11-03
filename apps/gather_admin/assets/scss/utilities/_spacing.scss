@@ -1,0 +1,41 @@
+// ==========================================================================
+// Utilities : Spacing (utilities/_spacing.scss)
+// --------------------------------------------------------------------------
+// Marges et paddings sur l'échelle d'espacement (grille de 4px), avec des
+// propriétés logiques : .m{,t,b,s,e,x,y}-{clé}, .p…, .m*-auto, et les
+// variantes responsive .m-{bp}-{clé}.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+$_directions: (
+  '': '',
+  't': '-block-start',
+  'b': '-block-end',
+  's': '-inline-start',
+  'e': '-inline-end',
+  'x': '-inline',
+  'y': '-block',
+);
+
+@include responsive using ($infix) {
+  @each $suffix, $logical in $_directions {
+    @each $key, $value in $spacing {
+      .m#{$suffix}#{$infix}-#{$key} {
+        margin#{$logical}: var(--ds-space-#{$key}) !important;
+      }
+    }
+
+    .m#{$suffix}#{$infix}-auto {
+      margin#{$logical}: auto !important;
+    }
+  }
+
+  @each $suffix, $logical in $_directions {
+    @each $key, $value in $spacing {
+      .p#{$suffix}#{$infix}-#{$key} {
+        padding#{$logical}: var(--ds-space-#{$key}) !important;
+      }
+    }
+  }
+}

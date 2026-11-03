@@ -1,0 +1,94 @@
+// ==========================================================================
+// Component: Card (components/_card.scss)
+// --------------------------------------------------------------------------
+// Carte sur la surface de la page, avec une bordure fine et une ombre douce.
+// La variante .card-elevated réagit au survol : surface relevée, ombre plus marquée.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.card {
+  // 1. Component Tokens
+  --card-bg: var(--ds-surface);
+  --card-border-color: var(--ds-color-outline-variant);
+  --card-color: var(--ds-color-on-surface);
+  --card-title-color: var(--ds-color-on-surface);
+  --card-radius: var(--ds-radius-md);
+  --card-padding: var(--ds-space-6);
+  --card-shadow: var(--ds-shadow-sm);
+
+  // 2. Box Model
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: var(--ds-border-width) solid var(--card-border-color);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+
+  // 3. Couleurs
+  background-color: var(--card-bg);
+  color: var(--card-color);
+
+  // 4. Motion
+  transition: effects(background-color, box-shadow);
+}
+
+// Carte interactive : surface relevée et ombre plus marquée au survol
+.card-elevated {
+  cursor: pointer;
+
+  &:hover {
+    --card-bg: var(--ds-surface-container-low);
+    --card-shadow: var(--ds-shadow-md);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Structure interne
+// --------------------------------------------------------------------------
+.card-header {
+  padding-block: var(--card-padding) 0;
+  padding-inline: var(--card-padding);
+}
+
+.card-body {
+  flex: 1;
+  padding: var(--card-padding);
+}
+
+.card-footer {
+  padding-block: 0 var(--card-padding);
+  padding-inline: var(--card-padding);
+}
+
+.card-title {
+  margin-block: 0 var(--ds-space-2);
+  color: var(--card-title-color);
+  @include type(title, lg);
+}
+
+.card-text {
+  margin: 0;
+  color: inherit;
+}
+
+.card-img,
+.card-img-top {
+  inline-size: 100%;
+  block-size: auto;
+  object-fit: cover;
+}
+
+// Variantes (surcharge uniquement des Component Tokens)
+@each $role, $token in $roles {
+  .card-#{$role} {
+    --card-bg: #{role-color($role, 'container')};
+    --card-border-color: transparent;
+    --card-color: #{role-color($role, 'on-container')};
+    --card-title-color: #{role-color($role, 'on-container')};
+  }
+}

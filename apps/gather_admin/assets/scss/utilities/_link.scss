@@ -1,0 +1,53 @@
+// ==========================================================================
+// Utilities : Links (utilities/_link.scss)
+// --------------------------------------------------------------------------
+// Le style de base des liens est dans foundation/_reset.scss.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+@each $role, $token in $roles {
+  .link-#{$role} {
+    color: role-color($role) !important;
+    text-decoration-color: currentColor !important;
+
+    &:hover,
+    &:focus-visible {
+      color: role-color($role, 'on-container') !important;
+    }
+  }
+}
+
+.link-light {
+  color: var(--ds-color-inverse-on-surface) !important;
+  text-decoration-color: currentColor !important;
+}
+
+.link-dark {
+  color: var(--ds-color-inverse-surface) !important;
+  text-decoration-color: currentColor !important;
+}
+
+.link-body-emphasis {
+  color: var(--ds-color-on-surface) !important;
+  text-decoration-color: currentColor !important;
+}
+
+// Soulignement
+.link-underline {
+  text-decoration: underline !important;
+}
+
+.link-underline-opacity-0,
+.link-underline-opacity-0-hover:hover {
+  text-decoration: none !important;
+}
+
+// Opacité du soulignement (décoratif : sans effet sur le contraste du texte)
+@each $opacity in 10, 25, 50, 75, 100 {
+  .link-underline-opacity-#{$opacity},
+  .link-underline-opacity-#{$opacity}-hover:hover {
+    text-decoration-line: underline !important;
+    text-decoration-color: color-mix(in srgb, currentColor #{$opacity * 1%}, transparent) !important;
+  }
+}

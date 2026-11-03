@@ -1,0 +1,5 @@
+gather_core:
+    # URL de base des fichiers uploadés (avatars)
+    default_uri: '%env(DEFAULT_URI)%'
+    # URL de l'application ciblée par les liens des e-mails : /verify-email, /reset-password, /confirm-email-change, /login
+    app_url: '%env(default::FRONTEND_URL)%'

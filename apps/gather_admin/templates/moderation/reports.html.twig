@@ -1,0 +1,96 @@
+{% extends 'layouts/dashboard.html.twig' %}
+{% import 'fragments/_macros.html.twig' as ui %}
+
+{% block title %}Signalements{% endblock %}
+
+{% block content %}
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ path('admin_home') }}">Back-office</a></li>
+      <li class="breadcrumb-item active" aria-current="page">File des signalements</li>
+    </ol>
+  </nav>
+  <h1 class="h3 mb-0">File des signalements</h1>
+</div>
+
+<form class="row g-3 align-items-end" method="get">
+  <div class="col-12 col-sm-auto">
+    <label class="form-label" for="filter-status">Statut</label>
+    <select class="form-select" id="filter-status" name="status">
+      {% for item in statuses %}
+        <option value="{{ item.value }}" {{ status == item ? 'selected' }}>{{ ui.statusLabel(item.value) }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-12 col-sm-auto">
+    <label class="form-label" for="filter-type">Cible</label>
+    <select class="form-select" id="filter-type" name="type">
+      <option value="">Toutes</option>
+      {% for item in types %}
+        <option value="{{ item.value }}" {{ type == item ? 'selected' }}>{{ ui.statusLabel(item.value) }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-12 col-sm-auto">
+    <button type="submit" class="btn btn-outline-secondary">Filtrer</button>
+  </div>
+</form>
+
+<div class="d-flex flex-column gap-4">
+  {% for report in queue.items %}
+    {% set target = report.reportedPost ?? report.reportedComment %}
+    {% set author = report.reportedPost ? report.reportedPost.author : (report.reportedComment ? report.reportedComment.author : report.reportedUser) %}
+    {% set reportsCount = report.reportedPost ? report.reportedPost.reportsCount : (report.reportedComment ? report.reportedComment.reportsCount : null) %}
+    <article class="card">
+      <div class="card-body">
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+          {{ ui.statusBadge(report.status.value) }}
+          <span class="badge badge-secondary">{{ ui.statusLabel(report.targetType.value) }}</span>
+          <span class="badge badge-secondary">{{ ui.statusLabel(report.reason.value) }}</span>
+          {% if reportsCount is not null %}<span class="text-muted small">{{ reportsCount }} signalement(s)</span>{% endif %}
+        </div>
+        <p class="text-muted small mb-3">
+          Par @{{ report.reporter.username }} le {{ report.createdAt|date('d/m/Y H:i') }}
+          {% if author %}· visant @{{ author.username }} ({{ ui.statusLabel(author.status.value) }}, {{ author.warningsCount }} avertissement(s)){% endif %}
+        </p>
+        {% if target %}<div class="box mb-3 text-break">{{ target.content|slice(0, 600) }}</div>{% endif %}
+        {% if report.details %}<p class="mb-3">{{ report.details }}</p>{% endif %}
+
+        {% if report.status.value != 'resolved' %}
+          <form class="row g-3 align-items-end" method="post" action="{{ path('admin_report_resolve', {id: report.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('resolve' ~ report.id) }}">
+            <div class="col-12 col-md-4">
+              <label class="form-label" for="action-{{ report.id }}">Action</label>
+              <select class="form-select" id="action-{{ report.id }}" name="action" required>
+                {% for action in actions %}
+                  <option value="{{ action.value }}">
+                    {{ {dismiss: 'Ignorer & rétablir', delete_content: 'Supprimer le contenu', warning: 'Avertir l\'auteur', read_only: 'Lecture seule (1 à 3 j)', suspension: 'Suspension (7 à 30 j)', ban: 'Bannissement définitif'}[action.value] }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-12 col-sm-4 col-md-2">
+              <label class="form-label" for="days-{{ report.id }}">Durée (jours)</label>
+              <input class="form-control" id="days-{{ report.id }}" type="number" name="durationDays" min="1" max="30">
+            </div>
+            <div class="col-12 col-md">
+              <label class="form-label" for="reason-{{ report.id }}">Motif</label>
+              <input class="form-control" id="reason-{{ report.id }}" type="text" name="reason" required maxlength="1000">
+            </div>
+            <div class="col-12 col-md-auto">
+              <button type="submit" class="btn btn-primary">Appliquer</button>
+            </div>
+          </form>
+        {% else %}
+          <p class="text-muted small m-0">Traité par @{{ report.resolvedBy ? report.resolvedBy.username : '?' }} le {{ report.resolvedAt ? report.resolvedAt|date('d/m/Y H:i') }}</p>
+        {% endif %}
+      </div>
+    </article>
+  {% else %}
+    <div class="box">Aucun signalement pour ces critères.</div>
+  {% endfor %}
+</div>
+
+{{ ui.pagination('admin_reports', {status: status ? status.value, type: type ? type.value}, queue.page, queue.hasMore) }}
+{% endblock %}

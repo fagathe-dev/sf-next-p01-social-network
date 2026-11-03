@@ -1,0 +1,164 @@
+// ==========================================================================
+// Component: Form Check (forms/_form-check.scss)
+// --------------------------------------------------------------------------
+// Checkbox, radio et interrupteur (input[role="switch"] dans .form-switch).
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+$_checkbox: '.form-check-input[type="checkbox"]:not([role="switch"])';
+$_radio: '.form-check-input[type="radio"]';
+
+.form-check {
+  display: flex;
+  align-items: flex-start; // Labels sur plusieurs lignes
+  gap: var(--ds-space-2_5);
+}
+
+.form-check-input {
+  // 1. Component Tokens
+  --check-size: 1.25em;
+  --check-bg: transparent;
+  --check-border-color: var(--ds-color-outline);
+  --check-mark-color: var(--ds-color-on-primary);
+
+  // 2. Box Model
+  position: relative;
+  display: grid;
+  flex-shrink: 0;
+  place-content: center;
+  inline-size: var(--check-size);
+  block-size: var(--check-size);
+  margin: 0;
+  margin-block-start: 0.125em; // Aligne sur la première ligne du label
+  border: var(--ds-border-width) solid var(--check-border-color);
+  appearance: none;
+
+  // 3. Couleurs
+  background-color: var(--check-bg);
+  cursor: pointer;
+
+  // 4. Motion
+  transition: effects(background-color, border-color);
+
+  // 5. États interactifs
+  &:checked {
+    --check-bg: var(--ds-color-primary);
+    --check-border-color: var(--ds-color-primary);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  // Coche et point : apparition avec ressort
+  &::after {
+    content: '';
+    transform: scale(0);
+    transition: spring(transform);
+  }
+
+  &:checked::after {
+    transform: scale(1);
+  }
+
+  @include reduced-motion {
+    &::after {
+      transition: none;
+    }
+  }
+}
+
+// Checkbox (les interrupteurs sont exclus pour éviter le conflit de coche)
+#{$_checkbox} {
+  border-radius: var(--ds-radius-xs);
+
+  &::after {
+    inline-size: 0.8em;
+    block-size: 0.8em;
+    background-color: var(--check-mark-color);
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+}
+
+// Radio : point central
+#{$_radio} {
+  border-radius: var(--ds-radius-full);
+
+  &::after {
+    inline-size: 0.5em;
+    block-size: 0.5em;
+    border-radius: var(--ds-radius-full);
+    background-color: var(--check-mark-color);
+  }
+}
+
+.form-check-label {
+  color: var(--ds-color-on-surface);
+  @include type(body, lg);
+  cursor: pointer;
+}
+
+// Sous-texte d'un label (ex. « Get notified when… »)
+.form-check-label .text-muted {
+  display: block;
+  padding-block-start: var(--ds-space-0_5);
+  @include type(body, md);
+}
+
+// --------------------------------------------------------------------------
+// Interrupteur : piste 44×24, pastille de 16px
+// --------------------------------------------------------------------------
+.form-switch {
+  align-items: center;
+}
+
+.form-switch .form-check-input {
+  --switch-width: calc(var(--ds-space-10) + var(--ds-space-1));
+  --switch-height: var(--ds-space-6);
+  --switch-thumb: var(--ds-space-4);
+  --switch-thumb-color: var(--ds-color-outline);
+  --switch-inner: calc(var(--switch-height) - 2 * var(--ds-border-width));
+  --switch-offset: calc((var(--switch-inner) - var(--switch-thumb)) / 2);
+
+  --check-bg: var(--ds-surface-container-highest);
+
+  inline-size: var(--switch-width);
+  block-size: var(--switch-height);
+  margin-block-start: 0;
+  border-radius: var(--ds-radius-full);
+
+  &::after {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: var(--switch-offset);
+    inline-size: var(--switch-thumb);
+    block-size: var(--switch-thumb);
+    border-radius: var(--ds-radius-full);
+    background-color: var(--switch-thumb-color);
+    transform: translateY(-50%);
+    transition:
+      effects(background-color),
+      spatial(inset-inline-start, inline-size, block-size);
+  }
+
+  &:checked {
+    --check-bg: var(--ds-color-primary);
+    --switch-thumb-color: var(--ds-color-on-primary);
+  }
+
+  &:checked::after {
+    inset-inline-start: calc(var(--switch-width) - 2 * var(--ds-border-width) - var(--switch-thumb) - var(--switch-offset));
+  }
+
+  @include reduced-motion {
+    &::after {
+      transition: effects(background-color);
+    }
+  }
+}

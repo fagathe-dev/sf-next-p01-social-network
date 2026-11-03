@@ -1,0 +1,131 @@
+// ==========================================================================
+// Component: Segmented Control (forms/_segmented-control.scss)
+// --------------------------------------------------------------------------
+// Choix exclusif entre quelques options (2 à 5) : un groupe role="radiogroup"
+// de boutons role="radio". La sélection et la navigation clavier sont gérées
+// par interactions/components/segmented-control.ts, qui émet `ds:change`.
+// La hauteur totale suit les hauteurs de contrôle (alignée sur les boutons).
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.segmented-control {
+  // 1. Component Tokens
+  --segmented-height: var(--ds-control-height-md);
+  --segmented-padding: var(--ds-space-1);
+  --segmented-radius: var(--ds-radius-md);
+  --segmented-bg: var(--ds-surface-container-low);
+  --segmented-border-color: var(--ds-color-outline-variant);
+  --segmented-option-px: var(--ds-space-3_5);
+  --segmented-option-font-size: var(--ds-text-label-lg);
+  --segmented-option-icon-size: var(--ds-icon-size-md);
+  --segmented-selected-bg: var(--ds-color-primary-container);
+  --segmented-selected-color: var(--ds-color-on-primary-container);
+
+  // 2. Box Model
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-1);
+  max-inline-size: 100%;
+  min-block-size: var(--segmented-height);
+  padding: var(--segmented-padding);
+  border: var(--ds-border-width) solid var(--segmented-border-color);
+  border-radius: var(--segmented-radius);
+
+  // 3. Couleurs
+  background-color: var(--segmented-bg);
+}
+
+.segmented-control-option {
+  // 1. Component Tokens
+  --segmented-option-bg: transparent;
+  --segmented-option-color: var(--ds-color-on-surface-variant);
+
+  // 2. Box Model : hauteur du groupe moins son padding et sa bordure.
+  // Rayon concentrique : rayon du groupe moins son padding.
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-1_5);
+  min-block-size: calc(var(--segmented-height) - 2 * (var(--segmented-padding) + var(--ds-border-width)));
+  padding-block: 0;
+  padding-inline: var(--segmented-option-px);
+  border: none;
+  border-radius: max(0px, calc(var(--segmented-radius) - var(--segmented-padding)));
+
+  // 3. Typographie & Couleurs
+  background-color: var(--segmented-option-bg);
+  color: var(--segmented-option-color);
+  font-family: inherit;
+  font-size: var(--segmented-option-font-size);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+
+  // 4. Motion
+  transition: effects(background-color, color);
+
+  // 5. États interactifs
+  &:hover:not(:disabled, [aria-checked='true']) {
+    background-color: state-layer(var(--segmented-option-bg), var(--ds-color-on-surface));
+    color: var(--ds-color-on-surface);
+  }
+
+  &:active:not(:disabled, [aria-checked='true']) {
+    background-color: state-layer(var(--segmented-option-bg), var(--ds-color-on-surface), 'pressed');
+  }
+
+  // Focus à l'intérieur du groupe pour ne pas être rogné par son arrondi
+  &:focus-visible {
+    @include focus-ring(calc(var(--ds-focus-ring-width) * -1));
+  }
+
+  &[aria-checked='true'] {
+    --segmented-option-bg: var(--segmented-selected-bg);
+    --segmented-option-color: var(--segmented-selected-color);
+  }
+
+  &:disabled {
+    color: disabled-content();
+    cursor: not-allowed;
+  }
+
+  > i {
+    font-size: var(--segmented-option-icon-size);
+  }
+}
+
+// --------------------------------------------------------------------------
+// Variantes
+// --------------------------------------------------------------------------
+
+// Petite taille : groupe de 32px, pour les barres d'outils
+.segmented-control-sm {
+  --segmented-height: var(--ds-control-height-sm);
+  --segmented-padding: var(--ds-space-0_5);
+  --segmented-radius: var(--ds-radius-sm);
+  --segmented-option-px: var(--ds-space-3);
+  --segmented-option-font-size: var(--ds-text-label-md);
+  --segmented-option-icon-size: var(--ds-icon-size-sm);
+}
+
+// Pleine largeur : segments de largeur égale
+.segmented-control-full {
+  display: flex;
+  inline-size: 100%;
+}
+
+.segmented-control-full > .segmented-control-option {
+  flex: 1 1 0;
+}
+
+// Coche sur le segment sélectionné, s'il n'a pas déjà sa propre icône
+.segmented-control-check > .segmented-control-option[aria-checked='true']:not(:has(> i))::before {
+  content: '';
+  inline-size: 1em;
+  block-size: 1em;
+  background-color: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center / contain no-repeat;
+}

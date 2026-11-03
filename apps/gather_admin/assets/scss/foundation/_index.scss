@@ -1,0 +1,6 @@
+// Fondation : polices (en premier, pour garder l'import CSS en tête),
+// tokens, reset et typographie
+@forward 'fonts';
+@forward 'tokens';
+@forward 'reset';
+@forward 'typography';

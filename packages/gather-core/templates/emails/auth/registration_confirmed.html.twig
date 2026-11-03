@@ -1,0 +1,38 @@
+{% extends '@CorePhp/layout.html.twig' %}
+
+{% block content %}
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'h1',
+    content: 'Bienvenue ' ~ (dto.recipientName|e) ~ ' !'
+  } only %}
+
+  {% include '@CorePhp/components/_alert.html.twig' with {
+    type: 'success',
+    title: 'Adresse e-mail vérifiée',
+    content: 'Votre inscription est désormais complète et votre compte est actif.'
+  } only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'p',
+    content: 'Vous pouvez dès à présent accéder à votre espace personnel en cliquant sur le bouton ci-dessous :'
+  } only %}
+
+  {% include '@CorePhp/components/_section.html.twig' with {
+    align: 'center',
+    padding: '20px 0',
+    content: include('@CorePhp/components/_button.html.twig', {
+      url: dto.loginUrl,
+      label: 'Se connecter à mon espace',
+      bg_color: '#0f172b',
+      text_color: '#ffffff'
+    }, with_context = false)
+  } only %}
+
+  {% include '@CorePhp/components/_divider.html.twig' only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'small',
+    color: '#64748b',
+    content: 'Si le bouton ne s\'affiche pas correctement, copiez ce lien dans votre navigateur : ' ~ (dto.loginUrl|e)
+  } only %}
+{% endblock %}

@@ -1,0 +1,64 @@
+// ==========================================================================
+// Component: Button Close (components/_btn-close.scss)
+// --------------------------------------------------------------------------
+// Croix dessinée par un masque SVG coloré avec currentColor : elle prend la
+// couleur de son conteneur (alerte, toast, modale). Taille relative à la
+// police du conteneur, zone cliquable étendue à 44px.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.btn-close {
+  // 1. Component Tokens
+  --btn-close-size: 1.5em;
+  --btn-close-color: inherit;
+
+  // 2. Box Model
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--btn-close-size);
+  block-size: var(--btn-close-size);
+  padding: 0.25em;
+  border: 0;
+  border-radius: var(--ds-radius-sm);
+  @include touch-target;
+
+  // 3. Couleurs
+  background-color: transparent;
+  color: var(--btn-close-color);
+  cursor: pointer;
+
+  // 4. Motion
+  transition: effects(background-color);
+
+  &::after {
+    content: '';
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    background-color: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+
+  // 5. États interactifs
+  &:hover {
+    background-color: state-layer(transparent, currentColor);
+  }
+
+  &:active {
+    background-color: state-layer(transparent, currentColor, 'pressed');
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &:disabled,
+  &.disabled {
+    color: disabled-content();
+    pointer-events: none;
+    user-select: none;
+  }
+}

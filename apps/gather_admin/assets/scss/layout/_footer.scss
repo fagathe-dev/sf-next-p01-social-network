@@ -1,0 +1,73 @@
+// ==========================================================================
+// Layout : Footer (layout/_footer.scss)
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.footer {
+  // 1. Component Tokens
+  --footer-bg: var(--ds-surface-container);
+  --footer-color: var(--ds-color-on-surface);
+  --footer-muted-color: var(--ds-color-on-surface-variant);
+  --footer-divider-color: var(--ds-color-outline-variant);
+
+  // 2. Box Model
+  padding-block: var(--ds-space-12);
+
+  // 3. Couleurs
+  background-color: var(--footer-bg);
+  color: var(--footer-color);
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-8);
+
+  @include media-up(md) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+// Liens : surcharge des Component Tokens de .nav-link
+.footer-links {
+  --nav-link-color: var(--footer-muted-color);
+  --nav-link-hover-color: var(--footer-color);
+  --nav-link-active-bg: transparent;
+  --nav-link-active-color: var(--footer-color);
+}
+
+.footer-links .nav-link:hover,
+.footer-links .nav-link:focus-visible {
+  text-decoration: underline;
+}
+
+// Sous-section légale
+.footer-bottom {
+  margin-block-start: var(--ds-space-8);
+  padding-block-start: var(--ds-space-6);
+  border-block-start: var(--ds-border-width) solid var(--footer-divider-color);
+  color: var(--footer-muted-color);
+  text-align: center;
+  @include type(body, md);
+
+  @include media-up(md) {
+    display: flex;
+    justify-content: space-between;
+    text-align: start;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Variantes (surcharge uniquement des Component Tokens)
+// --------------------------------------------------------------------------
+@each $role in $brand-roles {
+  .footer-#{$role} {
+    --footer-bg: #{role-color($role, 'container')};
+    --footer-color: #{role-color($role, 'on-container')};
+    --footer-muted-color: #{role-color($role, 'on-container')};
+    --footer-divider-color: color-mix(in srgb, #{role-color($role, 'on-container')} 20%, transparent);
+  }
+}

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="layout-auth">
+  <main class="auth-card">
+    {% if block('auth_header') is not empty %}
+      <header class="auth-header">
+        {% block auth_header %}{% endblock %}
+      </header>
+    {% endif %}
+
+    <div class="auth-body">
+      {% include 'fragments/_flash_messages.html.twig' %}
+
+      {% block content %}{% endblock %}
+    </div>
+
+    {# Bandeau coloré : à ne pas afficher vide #}
+    {% if block('auth_footer') is not empty %}
+      <footer class="auth-footer">
+        {% block auth_footer %}{% endblock %}
+      </footer>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}

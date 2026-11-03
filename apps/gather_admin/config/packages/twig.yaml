@@ -1,0 +1,11 @@
+twig:
+    file_name_pattern: '*.twig'
+    form_themes: ['bootstrap_5_layout.html.twig']
+    globals:
+        design_system_url: '%env(DESIGN_SYSTEM_URL)%'
+        app_name: '%env(default::APP_NAME)%'
+        app_logo: '%env(default::LOGO_PATH)%'
+
+when@test:
+    twig:
+        strict_variables: true

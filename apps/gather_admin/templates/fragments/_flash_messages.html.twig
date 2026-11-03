@@ -1,0 +1,19 @@
+{% for label, messages in app.flashes %}
+  {# Mapper 'error' et 'notice' de Symfony vers les rôles du Design System #}
+  {% set alertType = {error: 'danger', notice: 'info'}[label] ?? label %}
+
+  {# Définir l'icône selon le type #}
+  {% set alertIcon = 'ri-information-line' %}
+  {% if alertType == 'success' %} {% set alertIcon = 'ri-checkbox-circle-line' %}
+  {% elseif alertType == 'danger' %} {% set alertIcon = 'ri-close-circle-line' %}
+  {% elseif alertType == 'warning' %} {% set alertIcon = 'ri-alert-line' %}
+  {% endif %}
+
+  {% for message in messages %}
+    <div class="alert alert-soft-{{ alertType }} alert-dismissible mb-4" role="alert">
+      <i class="{{ alertIcon }} alert-icon"></i>
+      <div class="alert-content">{{ message }}</div>
+      <button type="button" class="btn-close" data-ds-dismiss="alert" aria-label="Fermer"></button>
+    </div>
+  {% endfor %}
+{% endfor %}

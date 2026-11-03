@@ -1,0 +1,41 @@
+// ==========================================================================
+// Component: Collapse (components/_collapse.scss)
+// --------------------------------------------------------------------------
+// Le JS fixe `height` en ligne pendant l'animation (.collapsing) et attend
+// l'événement transitionend. D'où deux règles :
+// - la propriété animée reste `height` (pas block-size), celle du JS ;
+// - la transition n'est jamais supprimée, seulement raccourcie quand
+//   l'utilisateur réduit les animations.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.collapse,
+.collapsing {
+  --collapse-duration: var(--ds-duration-spatial-slow);
+
+  @include reduced-motion {
+    --collapse-duration: 1ms;
+  }
+}
+
+.collapse {
+  height: 0;
+  overflow: hidden;
+  transition: height var(--collapse-duration) var(--ds-ease-spatial);
+
+  // Une fois ouvert, plus rien à rogner : un menu déroulant placé dedans
+  // (navbar mobile) peut déborder. Le JS retire .show avant de replier.
+  &.show {
+    height: auto;
+    overflow: visible;
+  }
+}
+
+.collapsing {
+  position: relative;
+  display: block; // Visible pour que le JS puisse mesurer scrollHeight
+  height: 0;
+  overflow: hidden;
+  transition: height var(--collapse-duration) var(--ds-ease-spatial);
+}

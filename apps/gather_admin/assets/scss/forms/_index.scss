@@ -1,0 +1,12 @@
+// Saisie de données. form-validation passe en dernier : ses états
+// (is-valid / is-invalid, posés aussi par FormManager) surchargent les
+// Component Tokens des champs, cases et cartes sélectionnables.
+@forward 'form-control';
+@forward 'form-check';
+@forward 'form-floating';
+@forward 'selectable-card';
+@forward 'chip';
+@forward 'segmented-control';
+@forward 'md-editor';
+@forward 'previewer';
+@forward 'form-validation';

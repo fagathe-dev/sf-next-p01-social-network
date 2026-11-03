@@ -1,0 +1,46 @@
+{# Libellés et rôles de couleur des énumérations de gather-core #}
+{% macro statusLabel(value) %}{{ {
+  pending: 'En attente', auto_hidden: 'Masqué automatiquement', resolved: 'Résolu',
+  post: 'Publication', comment: 'Commentaire', user: 'Membre',
+  spam: 'Spam', harassment: 'Harcèlement', hate_speech: 'Discours haineux', violence: 'Violence', nudity: 'Nudité', misinformation: 'Fausse information', other: 'Autre',
+  dismiss: 'Ignoré et rétabli', delete_content: 'Contenu supprimé', warning: 'Avertissement', read_only: 'Lecture seule', suspension: 'Suspension', ban: 'Bannissement',
+  open: 'Ouvert', in_progress: 'En cours', waiting_user: 'En attente du membre',
+  low: 'Basse', normal: 'Normale', high: 'Haute', urgent: 'Urgente',
+  bug_report: 'Bug', account_issue: 'Compte', moderation_appeal: 'Contestation', privacy_gdpr: 'Vie privée / RGPD',
+  active: 'Actif', suspended: 'Suspendu', banned: 'Banni'
+}[value] ?? value }}{% endmacro %}
+
+{% macro statusBadge(value) %}
+  {% set role = {
+    pending: 'warning', auto_hidden: 'danger', resolved: 'success',
+    open: 'info', in_progress: 'warning', waiting_user: 'secondary',
+    low: 'secondary', normal: 'info', high: 'warning', urgent: 'danger',
+    dismiss: 'success', delete_content: 'danger', warning: 'warning', read_only: 'warning', suspension: 'danger', ban: 'danger'
+  }[value] ?? 'secondary' %}
+  <span class="badge badge-{{ role }}">{{ _self.statusLabel(value) }}</span>
+{% endmacro %}
+
+{# Pagination précédent / suivant : les listes ne connaissent pas leur total #}
+{% macro pagination(route, params, page, hasMore) %}
+  {% if page > 1 or hasMore %}
+    <nav aria-label="Pagination">
+      <ul class="pagination">
+        <li class="page-item{{ page <= 1 ? ' disabled' }}">
+          {% if page > 1 %}
+            <a class="page-link" href="{{ path(route, params|merge({page: page - 1})) }}" aria-label="Page précédente"><i class="ri-arrow-left-s-line"></i></a>
+          {% else %}
+            <a class="page-link" aria-disabled="true" aria-label="Page précédente"><i class="ri-arrow-left-s-line"></i></a>
+          {% endif %}
+        </li>
+        <li class="page-item active"><a class="page-link" aria-current="page">{{ page }}</a></li>
+        <li class="page-item{{ not hasMore ? ' disabled' }}">
+          {% if hasMore %}
+            <a class="page-link" href="{{ path(route, params|merge({page: page + 1})) }}" aria-label="Page suivante"><i class="ri-arrow-right-s-line"></i></a>
+          {% else %}
+            <a class="page-link" aria-disabled="true" aria-label="Page suivante"><i class="ri-arrow-right-s-line"></i></a>
+          {% endif %}
+        </li>
+      </ul>
+    </nav>
+  {% endif %}
+{% endmacro %}

@@ -1,0 +1,139 @@
+// ==========================================================================
+// Typographie (foundation/_typography.scss)
+// --------------------------------------------------------------------------
+// Titres et éléments de texte, mappés sur l'échelle M3 Expressive :
+// display → headline → title → body → label.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+// --------------------------------------------------------------------------
+// Titres h1–h6 et classes .h1–.h6
+// --------------------------------------------------------------------------
+:where(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6) {
+  margin-block: 0 var(--ds-space-2);
+  color: var(--ds-color-on-surface);
+  text-wrap: balance;
+}
+
+h1,
+.h1 {
+  @include type(display, sm);
+}
+
+h2,
+.h2 {
+  @include type(headline, lg);
+}
+
+h3,
+.h3 {
+  @include type(headline, md);
+}
+
+h4,
+.h4 {
+  @include type(headline, sm);
+}
+
+h5,
+.h5 {
+  @include type(title, lg);
+}
+
+h6,
+.h6 {
+  @include type(title, md);
+}
+
+// --------------------------------------------------------------------------
+// Display : moments éditoriaux, chiffres phares, Hero
+// --------------------------------------------------------------------------
+.display-1,
+.display-2 {
+  @include type(display, lg);
+}
+
+.display-3,
+.display-4 {
+  @include type(display, md);
+}
+
+.display-5,
+.display-6 {
+  @include type(display, sm);
+}
+
+// Chapô : plus grand que le texte courant, graisse régulière
+.lead {
+  font-size: var(--ds-text-title-lg);
+  font-weight: var(--ds-font-weight-regular);
+  line-height: var(--ds-line-height-body);
+}
+
+// --------------------------------------------------------------------------
+// Éléments de texte
+// --------------------------------------------------------------------------
+mark,
+.mark {
+  padding-block: 0.1em;
+  padding-inline: var(--ds-space-1);
+  border-radius: var(--ds-radius-xs);
+  background-color: var(--ds-color-primary-container);
+  color: var(--ds-color-on-primary-container);
+}
+
+small,
+.small {
+  font-size: 0.875em;
+}
+
+.initialism {
+  font-size: 0.875em;
+  letter-spacing: var(--ds-letter-spacing-caps);
+  text-transform: uppercase;
+}
+
+// --------------------------------------------------------------------------
+// Citations
+// --------------------------------------------------------------------------
+.blockquote {
+  margin: 0;
+  max-inline-size: var(--ds-size-reading);
+  @include type(title, lg);
+  font-weight: var(--ds-font-weight-regular);
+}
+
+.blockquote-footer {
+  display: block;
+  padding-block-start: var(--ds-space-2);
+  color: var(--ds-color-on-surface-variant);
+  @include type(body, md);
+
+  &::before {
+    content: '— ';
+  }
+}
+
+// --------------------------------------------------------------------------
+// Listes de définitions horizontales
+// --------------------------------------------------------------------------
+.dl-horizontal {
+  --dl-term-width: 10rem;
+
+  @include media-up(sm) {
+    dt {
+      float: inline-start;
+      clear: inline-start;
+      inline-size: var(--dl-term-width);
+      overflow: hidden;
+      text-align: end;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    dd {
+      margin-inline-start: calc(var(--dl-term-width) + var(--ds-space-5));
+    }
+  }
+}

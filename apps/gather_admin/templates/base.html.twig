@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{% block title %}Back-office{% endblock %} · {{ app_name }}</title>
+
+  {# Thème appliqué avant le premier rendu (pas de flash clair → sombre).
+     Même clé et mêmes valeurs que assets/ts/services/theme.ts #}
+  <script>
+    (function () {
+      var mode = 'auto';
+      try { mode = localStorage.getItem('ds-theme') || 'auto'; } catch (e) {}
+      var dark = mode === 'dark' || (mode !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.setAttribute('data-ui-theme', dark ? 'dark' : 'light');
+    })();
+  </script>
+
+  <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon">
+
+  {# Librairie d'icônes #}
+  <link rel="stylesheet" href="{{ asset( design_system_url ~'/assets/ds-icons.css') }}">
+  {# Design System compilé #}
+  <link rel="stylesheet" href="{{ asset( design_system_url ~'/css/ds-ui-kit.css') }}">
+  {% block stylesheets %}{% endblock %}
+</head>
+<body>
+  {% block body %}{% endblock %}
+
+  <script type="module" src="{{ asset('js/main.js') }}"></script>
+  {% block javascripts %}{% endblock %}
+</body>
+</html>

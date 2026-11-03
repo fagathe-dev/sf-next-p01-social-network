@@ -1,0 +1,226 @@
+// ==========================================================================
+// Component: Markdown Editor (forms/_md-editor.scss)
+// --------------------------------------------------------------------------
+// Barre d'outils (SegmentedControl Écrire / Aperçu + boutons de formatage),
+// zone de saisie et aperçu. Comportement : interactions/components/md-editor.ts
+// (data-ds-md-editor). Le conteneur porte l'anneau de focus de la saisie.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.md-editor {
+  // 1. Component Tokens
+  --md-editor-bg: transparent;
+  --md-editor-border-color: var(--ds-color-outline);
+  --md-editor-padding: var(--ds-space-3);
+  --md-editor-toolbar-padding: var(--ds-space-2);
+  --md-editor-button-size: var(--ds-control-height-sm);
+  --md-editor-min-height: calc(var(--ds-space-24) + var(--ds-space-12));
+
+  // 2. Box Model
+  position: relative;
+  overflow: hidden;
+  border: var(--ds-border-width) solid var(--md-editor-border-color);
+  border-radius: var(--ds-radius-md);
+
+  // 3. Couleurs
+  background-color: var(--md-editor-bg);
+  transition: effects(border-color);
+
+  // Anneau sur le conteneur quand on écrit (la barre d'outils a ses propres anneaux)
+  &:has(> textarea:focus) {
+    --md-editor-border-color: var(--ds-focus-ring-color);
+
+    @include focus-ring;
+  }
+}
+
+// Version compacte
+.md-editor--compact {
+  --md-editor-padding: var(--ds-space-2);
+  --md-editor-toolbar-padding: var(--ds-space-1) var(--ds-space-2);
+  --md-editor-min-height: var(--ds-space-24);
+}
+
+// --------------------------------------------------------------------------
+// Barre d'outils
+// --------------------------------------------------------------------------
+.md-editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-2);
+  padding: var(--md-editor-toolbar-padding);
+  border-block-end: var(--ds-border-width) solid var(--ds-color-outline-variant);
+  background-color: var(--ds-surface-container);
+}
+
+.md-editor-format-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-1);
+}
+
+// Bouton de formatage : bouton icône carré
+.md-format-btn {
+  --md-btn-bg: transparent;
+  --md-btn-color: var(--ds-color-on-surface-variant);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--md-editor-button-size);
+  block-size: var(--md-editor-button-size);
+  padding: 0;
+  border: var(--ds-border-width) solid transparent;
+  border-radius: var(--ds-radius-sm);
+  background-color: var(--md-btn-bg);
+  color: var(--md-btn-color);
+  font-size: var(--ds-icon-size-sm);
+  cursor: pointer;
+  @include touch-target;
+  transition: effects(background-color, color, border-color);
+
+  &:hover:not(:disabled) {
+    background-color: state-layer(var(--md-btn-bg), var(--ds-color-on-surface));
+    color: var(--ds-color-on-surface);
+  }
+
+  &:active:not(:disabled) {
+    background-color: state-layer(var(--md-btn-bg), var(--ds-color-on-surface), 'pressed');
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  // Désactivés en mode aperçu
+  &:disabled {
+    color: disabled-content();
+    cursor: not-allowed;
+  }
+}
+
+.md-editor-separator {
+  inline-size: var(--ds-border-width);
+  block-size: calc(var(--md-editor-button-size) * 0.6);
+  align-self: center;
+  background-color: var(--ds-color-outline-variant);
+}
+
+// --------------------------------------------------------------------------
+// Zone de saisie : l'anneau est porté par le conteneur, d'où le retrait des
+// bordures et de l'outline du textarea (y compris .form-control)
+// --------------------------------------------------------------------------
+.md-editor > textarea {
+  min-block-size: var(--md-editor-min-height);
+  padding: var(--md-editor-padding);
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none;
+  outline: none !important;
+  background-color: transparent;
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-body-md);
+  line-height: var(--ds-line-height-relaxed);
+  resize: vertical;
+}
+
+// --------------------------------------------------------------------------
+// Aperçu (HTML généré par le Markdown)
+// --------------------------------------------------------------------------
+.md-editor-preview {
+  min-block-size: var(--md-editor-min-height);
+  padding: var(--md-editor-padding);
+  overflow-wrap: break-word;
+  color: var(--ds-color-on-surface);
+  line-height: var(--ds-line-height-relaxed);
+
+  > :first-child {
+    margin-block-start: 0;
+  }
+
+  > :last-child {
+    margin-block-end: 0;
+  }
+
+  h1 {
+    margin-block: 0 var(--ds-space-3);
+    @include type(headline, sm);
+  }
+
+  h2 {
+    margin-block: var(--ds-space-4) var(--ds-space-2);
+    @include type(title, lg);
+  }
+
+  h3,
+  h4 {
+    margin-block: var(--ds-space-3) var(--ds-space-2);
+    @include type(title, md);
+  }
+
+  p,
+  ul,
+  ol {
+    margin-block: 0 var(--ds-space-3);
+  }
+
+  ul,
+  ol {
+    padding-inline-start: var(--ds-space-6);
+  }
+
+  strong {
+    font-weight: var(--ds-font-weight-bold);
+  }
+
+  u {
+    text-decoration-color: var(--ds-color-primary);
+    text-underline-offset: 0.15em;
+  }
+
+  blockquote {
+    margin: 0 0 var(--ds-space-3);
+    padding-inline-start: var(--ds-space-4);
+    border-inline-start: var(--ds-border-width-thick) solid var(--ds-color-outline-variant);
+    color: var(--ds-color-on-surface-variant);
+  }
+
+  pre {
+    margin-block: 0 var(--ds-space-3);
+    padding: var(--ds-space-3);
+    overflow-x: auto;
+    border-radius: var(--ds-radius-sm);
+    background-color: var(--ds-code-surface);
+    color: var(--ds-code-on-surface);
+    font-size: var(--ds-text-body-md);
+  }
+
+  pre code {
+    padding: 0;
+    background-color: transparent;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  img {
+    max-inline-size: 100%;
+    border-radius: var(--ds-radius-sm);
+  }
+
+  hr {
+    margin-block: var(--ds-space-4);
+  }
+
+  .text-muted {
+    font-style: italic;
+  }
+}
+
+// Message affiché quand il n'y a rien à prévisualiser
+.md-editor-empty {
+  color: var(--ds-color-on-surface-variant);
+  font-style: italic;
+}

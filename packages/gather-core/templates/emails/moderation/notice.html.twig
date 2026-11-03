@@ -1,0 +1,33 @@
+{% extends '@CorePhp/layout.html.twig' %}
+
+{% set labels = {
+  delete_content: 'Un de vos contenus a été supprimé.',
+  warning: 'Vous recevez un avertissement.',
+  read_only: 'Votre compte passe en lecture seule pour ' ~ (dto.durationDays ?? 1) ~ ' jour(s).',
+  suspension: 'Votre compte est suspendu pour ' ~ (dto.durationDays ?? 7) ~ ' jour(s).',
+  ban: 'Votre compte a été banni définitivement.'
+} %}
+
+{% block content %}
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'h1',
+    content: 'Décision de modération'
+  } only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'p',
+    content: 'Bonjour <strong>' ~ (dto.recipientName|e) ~ '</strong>,'
+  } only %}
+
+  {% include '@CorePhp/components/_alert.html.twig' with {
+    type: 'warning',
+    title: labels[dto.action] ?? 'Une décision a été prise sur votre compte.',
+    content: 'Motif : ' ~ (dto.reason|e)
+  } only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'small',
+    color: '#6E6E82',
+    content: 'Vous pouvez contester cette décision depuis la rubrique Aide &amp; Support de vos paramètres.'
+  } only %}
+{% endblock %}

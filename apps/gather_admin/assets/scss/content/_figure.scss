@@ -1,0 +1,21 @@
+// ==========================================================================
+// Component: Figure (content/_figure.scss)
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.figure {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--ds-space-2);
+  margin: 0;
+}
+
+.figure-img {
+  line-height: 1;
+}
+
+.figure-caption {
+  color: var(--ds-color-on-surface-variant);
+  @include type(body, md);
+}

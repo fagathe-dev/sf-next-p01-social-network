@@ -1,0 +1,128 @@
+// ==========================================================================
+// Utilities : Flexbox & Order (utilities/_flex.scss)
+// --------------------------------------------------------------------------
+// Classes .{préfixe}-{valeur} et .{préfixe}-{bp}-{valeur}.
+// Les gap sont générés par _gap.scss (tokens d'espacement).
+// ==========================================================================
+
+@use 'sass:map';
+@use '../abstracts' as *;
+
+$_utilities: (
+  (
+    'prefix': 'flex',
+    'property': flex-direction,
+    'values': (
+      'row': row,
+      'row-reverse': row-reverse,
+      'column': column,
+      'column-reverse': column-reverse,
+    ),
+  ),
+  (
+    'prefix': 'flex',
+    'property': flex-wrap,
+    'values': (
+      'wrap': wrap,
+      'nowrap': nowrap,
+      'wrap-reverse': wrap-reverse,
+    ),
+  ),
+  (
+    'prefix': 'flex',
+    'property': flex,
+    'values': (
+      'fill': 1 1 auto,
+    ),
+  ),
+  (
+    'prefix': 'flex',
+    'property': flex-grow,
+    'values': (
+      'grow-0': 0,
+      'grow-1': 1,
+    ),
+  ),
+  (
+    'prefix': 'flex',
+    'property': flex-shrink,
+    'values': (
+      'shrink-0': 0,
+      'shrink-1': 1,
+    ),
+  ),
+  (
+    'prefix': 'justify-content',
+    'property': justify-content,
+    'values': (
+      'start': flex-start,
+      'end': flex-end,
+      'center': center,
+      'between': space-between,
+      'around': space-around,
+      'evenly': space-evenly,
+    ),
+  ),
+  (
+    'prefix': 'align-items',
+    'property': align-items,
+    'values': (
+      'start': flex-start,
+      'end': flex-end,
+      'center': center,
+      'baseline': baseline,
+      'stretch': stretch,
+    ),
+  ),
+  (
+    'prefix': 'align-content',
+    'property': align-content,
+    'values': (
+      'start': flex-start,
+      'end': flex-end,
+      'center': center,
+      'between': space-between,
+      'around': space-around,
+      'stretch': stretch,
+    ),
+  ),
+  (
+    'prefix': 'align-self',
+    'property': align-self,
+    'values': (
+      'auto': auto,
+      'start': flex-start,
+      'end': flex-end,
+      'center': center,
+      'baseline': baseline,
+      'stretch': stretch,
+    ),
+  ),
+  (
+    'prefix': 'order',
+    'property': order,
+    'values': (
+      'first': -1,
+      '0': 0,
+      '1': 1,
+      '2': 2,
+      '3': 3,
+      '4': 4,
+      '5': 5,
+      'last': 6,
+    ),
+  ),
+);
+
+@include responsive using ($infix) {
+  @each $utility in $_utilities {
+    $prefix: map.get($utility, 'prefix');
+    $property: map.get($utility, 'property');
+
+    @each $name, $value in map.get($utility, 'values') {
+      .#{$prefix}#{$infix}-#{$name} {
+        #{$property}: $value !important;
+      }
+    }
+  }
+}

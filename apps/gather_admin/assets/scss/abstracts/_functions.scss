@@ -1,0 +1,84 @@
+// ==========================================================================
+// Fonctions (abstracts/_functions.scss) — aucune sortie CSS
+// ==========================================================================
+
+@use 'sass:list';
+@use 'sass:map';
+
+// Rôles de couleur exposés dans les noms de classes (.btn-danger,
+// .badge-success…) et rôle System Token correspondant : l'API publique garde
+// "danger", les tokens suivent le nommage M3 ("error").
+$roles: (
+  'primary': 'primary',
+  'secondary': 'secondary',
+  'tertiary': 'tertiary',
+  'success': 'success',
+  'warning': 'warning',
+  'info': 'info',
+  'danger': 'error',
+);
+
+// Sous-ensemble utilisé par les composants qui ne déclinent que les rôles
+// de marque (cartes, jumbotron, footer)
+$brand-roles: ('primary', 'secondary', 'tertiary');
+
+// Couleur d'un rôle : role-color('primary') → var(--ds-color-primary),
+// role-color('danger', 'container') → var(--ds-color-error-container)
+@function role-color($role, $variant: null) {
+  $token: map.get($roles, $role) or $role;
+
+  @if $variant == 'on' {
+    @return var(--ds-color-on-#{$token});
+  } @else if $variant == 'container' {
+    @return var(--ds-color-#{$token}-container);
+  } @else if $variant == 'on-container' {
+    @return var(--ds-color-on-#{$token}-container);
+  }
+
+  @return var(--ds-color-#{$token});
+}
+
+// Calque d'état : mélange le fond d'un composant avec sa couleur de contenu.
+// Avec un fond transparent, on obtient un voile de la couleur de contenu.
+@function state-layer($bg, $content, $layer: 'hover') {
+  @return color-mix(in srgb, #{$bg}, #{$content} var(--ds-state-#{$layer}));
+}
+
+// Fond et contenu d'un élément désactivé (M3 : 12 % et 38 % de on-surface)
+@function disabled-container() {
+  @return color-mix(in srgb, var(--ds-color-on-surface) var(--ds-state-disabled-container), transparent);
+}
+
+@function disabled-content() {
+  @return color-mix(in srgb, var(--ds-color-on-surface) var(--ds-state-disabled-content), transparent);
+}
+
+// Transitions d'effet (couleurs, opacité, ombres) : courbe sans rebond
+// Usage : transition: effects(background-color, color), spatial(transform);
+@function effects($properties...) {
+  @return _transitions($properties, 'effects', 'effects');
+}
+
+// Transitions spatiales (transform, rayons, dimensions) : courbe expressive
+@function spatial($properties...) {
+  @return _transitions($properties, 'spatial', 'spatial');
+}
+
+// Transitions spatiales avec ressort doux (apparition, sélection)
+@function spring($properties...) {
+  @return _transitions($properties, 'spatial', 'spring');
+}
+
+@function _transitions($properties, $duration, $easing) {
+  $list: ();
+
+  @each $property in $properties {
+    $list: list.append(
+      $list,
+      ($property var(--ds-duration-#{$duration}) var(--ds-ease-#{$easing})),
+      $separator: comma
+    );
+  }
+
+  @return $list;
+}

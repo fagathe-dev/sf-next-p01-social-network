@@ -1,0 +1,58 @@
+// ==========================================================================
+// Component: Badge (components/_badge.scss)
+// --------------------------------------------------------------------------
+// Variantes : regular (conteneur, .badge-{rôle}, .badge-regular-{rôle},
+// .badge-soft-{rôle}) et solid (.badge-solid-{rôle}).
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.badge {
+  // 1. Component Tokens
+  --badge-bg: var(--ds-color-secondary-container);
+  --badge-color: var(--ds-color-on-secondary-container);
+  --badge-radius: var(--ds-radius-xs);
+
+  // 2. Box Model
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-1);
+  padding-block: var(--ds-space-1);
+  padding-inline: var(--ds-space-1_5);
+  border-radius: var(--badge-radius);
+
+  // 3. Typographie & Couleurs
+  background-color: var(--badge-bg);
+  color: var(--badge-color);
+  @include type(label, md);
+  line-height: 1;
+  white-space: nowrap;
+
+  &:is(a) {
+    text-decoration: none;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+// Forme pilule, par exemple pour un compteur
+.badge-pill {
+  --badge-radius: var(--ds-radius-full);
+}
+
+// Variantes (surcharge uniquement des Component Tokens)
+@each $role, $token in $roles {
+  .badge-#{$role},
+  .badge-regular-#{$role},
+  .badge-soft-#{$role} {
+    --badge-bg: #{role-color($role, 'container')};
+    --badge-color: #{role-color($role, 'on-container')};
+  }
+
+  .badge-solid-#{$role} {
+    --badge-bg: #{role-color($role)};
+    --badge-color: #{role-color($role, 'on')};
+  }
+}

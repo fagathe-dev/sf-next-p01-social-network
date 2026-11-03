@@ -1,0 +1,103 @@
+// ==========================================================================
+// Mixins (abstracts/_mixins.scss) — aucune sortie CSS
+// ==========================================================================
+
+@use 'sass:map';
+@use 'primitives' as *;
+
+// --------------------------------------------------------------------------
+// Responsive
+// Usage : @include media-up(md) { … }
+// --------------------------------------------------------------------------
+@mixin media-up($key) {
+  @if not map.has-key($breakpoints, $key) {
+    @error "Breakpoint inconnu : `#{$key}`. Valeurs possibles : #{map.keys($breakpoints)}.";
+  }
+
+  @media (min-width: map.get($breakpoints, $key)) {
+    @content;
+  }
+}
+
+// Jusqu'au breakpoint exclu (le pixel du breakpoint appartient à media-up)
+@mixin media-down($key) {
+  @if not map.has-key($breakpoints, $key) {
+    @error "Breakpoint inconnu : `#{$key}`. Valeurs possibles : #{map.keys($breakpoints)}.";
+  }
+
+  @media (max-width: (map.get($breakpoints, $key) - 0.02px)) {
+    @content;
+  }
+}
+
+// Génère une règle pour la base puis pour chaque breakpoint.
+// Le contenu reçoit l'infixe : '' puis '-sm', '-md'…
+// Usage : @include responsive using ($infix) { .d#{$infix}-none { … } }
+@mixin responsive {
+  @content ('');
+
+  @each $key, $value in $breakpoints {
+    @media (min-width: $value) {
+      @content ('-#{$key}');
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// Accessibilité
+// --------------------------------------------------------------------------
+
+// Anneau de focus : à placer dans un bloc :focus-visible
+@mixin focus-ring($offset: var(--ds-focus-ring-offset)) {
+  outline: var(--ds-focus-ring-width) solid var(--ds-focus-ring-color);
+  outline-offset: $offset;
+}
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+// Étend la zone cliquable à la cible tactile minimale (44px) sans changer
+// la taille visuelle. Utilise ::before (::after sert souvent aux icônes).
+// Passer $position: null quand l'élément est déjà positionné (absolute…).
+@mixin touch-target($pseudo: 'before', $position: relative) {
+  position: $position;
+
+  &::#{$pseudo} {
+    content: '';
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    inline-size: max(100%, var(--ds-touch-target));
+    block-size: max(100%, var(--ds-touch-target));
+    transform: translate(-50%, -50%);
+  }
+}
+
+@mixin visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// --------------------------------------------------------------------------
+// Typographie : applique un rôle de l'échelle M3 Expressive
+// Usage : @include type(label, lg);
+// --------------------------------------------------------------------------
+@mixin type($role, $size: 'md') {
+  $config: map.get($type-scale, $role);
+
+  @if not $config {
+    @error "Rôle typographique inconnu : `#{$role}`. Valeurs possibles : #{map.keys($type-scale)}.";
+  }
+
+  font-size: var(--ds-text-#{$role}-#{$size});
+  font-weight: var(--ds-font-weight-#{map.get($config, 'weight')});
+  line-height: var(--ds-line-height-#{$role});
+  letter-spacing: var(--ds-letter-spacing-#{$role});
+}

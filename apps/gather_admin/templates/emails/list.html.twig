@@ -1,0 +1,42 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block title %}Templates d'e-mails{% endblock %}
+
+{% block content %}
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ path('admin_home') }}">Back-office</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Templates d'e-mails</li>
+    </ol>
+  </nav>
+  <h1 class="h3 mb-0">Templates d'e-mails</h1>
+</div>
+
+<div class="card">
+<div class="card-body">
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th scope="col">Template</th>
+        <th scope="col">Objet</th>
+        <th scope="col">Description</th>
+        <th scope="col" class="text-end">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for template in templates %}
+        <tr>
+          <td class="fw-semibold">{{ template.label }}</td>
+          <td>{{ template.subject }}</td>
+          <td class="text-muted">{{ template.description }}</td>
+          <td class="text-end"><a class="btn btn-soft-primary btn-sm" href="{{ path('admin_emails_preview', {templateName: template.slug}) }}">Aperçu</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+</div>
+{% endblock %}

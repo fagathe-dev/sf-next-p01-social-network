@@ -1,0 +1,8 @@
+// Déplacements dans l'application. nav passe avant navbar, qui surcharge
+// les tokens de .nav-link.
+@forward 'breadcrumb';
+@forward 'nav';
+@forward 'navbar';
+@forward 'navbar-user';
+@forward 'pagination';
+@forward 'sidebar';

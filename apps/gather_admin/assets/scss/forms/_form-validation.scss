@@ -1,0 +1,49 @@
+// ==========================================================================
+// Component: Form Validation (forms/_form-validation.scss)
+// --------------------------------------------------------------------------
+// Les états ne font que redéfinir les Component Tokens du champ, y compris
+// la couleur de l'anneau de focus.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+$_states: (
+  'valid': 'success',
+  'invalid': 'danger',
+);
+
+@each $state, $role in $_states {
+  :is(.form-control, .form-select).is-#{$state} {
+    --input-bg: #{role-color($role, 'container')};
+    --input-color: #{role-color($role, 'on-container')};
+    --input-border-color: #{role-color($role)};
+    --ds-focus-ring-color: #{role-color($role)};
+  }
+
+  .#{$state}-feedback {
+    display: block;
+    inline-size: 100%;
+    padding-block-start: var(--ds-space-1_5);
+    color: role-color($role);
+    @include type(body, md);
+  }
+
+  // FormManager pose aussi l'état sur les radios et checkboxes
+  .form-check-input.is-#{$state} {
+    --check-border-color: #{role-color($role)};
+    --ds-focus-ring-color: #{role-color($role)};
+  }
+
+  .form-check-input.is-#{$state}:checked {
+    --check-bg: #{role-color($role)};
+  }
+}
+
+// Erreur uniquement : un liseré « valide » se confondrait avec la sélection
+.form-check-input.is-invalid ~ .form-check-label {
+  color: var(--ds-color-error);
+}
+
+.form-selectable-input.is-invalid + .form-selectable-label {
+  --selectable-ring: var(--ds-color-error);
+}

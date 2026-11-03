@@ -1,0 +1,30 @@
+framework:
+    rate_limiter:
+        auth:
+            policy: sliding_window
+            limit: 20
+            interval: '1 minute'
+        write:
+            policy: sliding_window
+            limit: 60
+            interval: '1 minute'
+        link_preview:
+            policy: sliding_window
+            limit: 20
+            interval: '1 minute'
+        public_support:
+            policy: sliding_window
+            limit: 5
+            interval: '1 hour'
+
+when@test:
+    framework:
+        rate_limiter:
+            auth:
+                policy: no_limit
+            write:
+                policy: no_limit
+            link_preview:
+                policy: no_limit
+            public_support:
+                policy: no_limit

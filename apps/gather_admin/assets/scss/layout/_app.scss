@@ -1,0 +1,34 @@
+// ==========================================================================
+// Layout : App — front-office public (layout/_app.scss)
+// --------------------------------------------------------------------------
+// Header collant, contenu extensible qui pousse le footer en bas de page.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.layout-app {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100vh;
+  min-block-size: 100dvh;
+  background-color: var(--ds-surface);
+}
+
+.app-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--ds-z-sticky);
+  flex-shrink: 0;
+}
+
+.app-main {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  inline-size: 100%;
+  padding-block: var(--ds-space-12);
+}
+
+.app-footer {
+  flex-shrink: 0;
+}

@@ -1,0 +1,117 @@
+// ==========================================================================
+// Layout : Authentification (layout/_auth.scss)
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.layout-auth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 100vh;
+  min-block-size: 100dvh;
+  padding-block: var(--ds-space-8);
+  padding-inline: var(--ds-space-4);
+  background-color: var(--ds-surface);
+}
+
+// Carte principale : conteneur majeur, rayon xl, séparée par sa surface
+.auth-card {
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  max-inline-size: var(--ds-size-auth-card);
+  overflow: hidden;
+  border: var(--ds-border-width) solid var(--ds-color-outline-variant);
+  border-radius: var(--ds-radius-md);
+  background-color: var(--ds-surface);
+  box-shadow: var(--ds-shadow-sm);
+}
+
+.auth-header {
+  display: flex;
+  justify-content: center;
+  padding-block: var(--ds-space-8) var(--ds-space-4);
+  padding-inline: var(--ds-space-8);
+}
+
+// Sélecteur Login / Sign up (bouton segmenté)
+.auth-tabs {
+  display: inline-flex;
+  gap: var(--ds-space-1);
+  padding: var(--ds-space-1);
+  border-radius: var(--ds-radius-md);
+  background-color: var(--ds-surface-container-highest);
+}
+
+.auth-tab {
+  --auth-tab-bg: transparent;
+  --auth-tab-color: var(--ds-color-on-surface-variant);
+
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--ds-control-height-sm);
+  padding-inline: var(--ds-space-4);
+  border-radius: var(--ds-radius-sm);
+  background-color: var(--auth-tab-bg);
+  color: var(--auth-tab-color);
+  text-decoration: none;
+  @include type(label, lg);
+  transition: effects(background-color, color);
+
+  &:hover {
+    background-color: state-layer(var(--auth-tab-bg), var(--auth-tab-color));
+    color: var(--auth-tab-color);
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &.active {
+    --auth-tab-bg: var(--ds-color-secondary-container);
+    --auth-tab-color: var(--ds-color-on-secondary-container);
+  }
+}
+
+.auth-body {
+  padding-block: var(--ds-space-4) var(--ds-space-8);
+  padding-inline: var(--ds-space-8);
+}
+
+// Séparateur « OR »
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-4);
+  padding-block: var(--ds-space-6);
+  color: var(--ds-color-on-surface-variant);
+  text-align: center;
+  text-transform: uppercase;
+  @include type(label, sm);
+  letter-spacing: var(--ds-letter-spacing-caps);
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-block-end: var(--ds-border-width) solid var(--ds-color-outline-variant);
+  }
+}
+
+// Zone inférieure (« Don't have an account? »)
+.auth-footer {
+  padding-block: var(--ds-space-6);
+  padding-inline: var(--ds-space-8);
+  border-block-start: var(--ds-border-width) solid var(--ds-color-outline-variant);
+  background-color: var(--ds-surface-container-high);
+  color: var(--ds-color-on-surface-variant);
+  text-align: center;
+  @include type(body, md);
+
+  a {
+    color: var(--ds-color-on-surface);
+    font-weight: var(--ds-font-weight-semibold);
+  }
+}

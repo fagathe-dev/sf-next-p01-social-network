@@ -1,0 +1,119 @@
+// ==========================================================================
+// Component: Dialog — modales et popups (feedback/_dialog.scss)
+// --------------------------------------------------------------------------
+// Style de l'élément natif <dialog> (showModal / show via le JS).
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+dialog {
+  // 1. Component Tokens
+  --dialog-bg: var(--ds-surface);
+  --dialog-color: var(--ds-color-on-surface);
+  --dialog-padding: var(--ds-space-6);
+
+  // 2. Box Model
+  position: relative;
+  flex-flow: column nowrap;
+  inline-size: min(100% - var(--ds-space-8), var(--ds-size-dialog));
+  max-inline-size: var(--ds-size-dialog);
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: var(--ds-border-width) solid var(--ds-color-outline-variant);
+  border-radius: var(--ds-radius-md);
+
+  // 3. Couleurs : élément au premier plan, seul cas avec une ombre marquée
+  background-color: var(--dialog-bg);
+  color: var(--dialog-color);
+  box-shadow: var(--ds-shadow-lg);
+
+  &[open] {
+    display: flex;
+    animation: ds-dialog-in var(--ds-duration-spatial-slow) var(--ds-ease-spatial);
+  }
+
+  // Voile : les variables CSS n'atteignent ::backdrop que dans les
+  // navigateurs récents, d'où la valeur de repli
+  &::backdrop {
+    background-color: color-mix(in srgb, var(--ds-color-scrim, black) 40%, transparent);
+    backdrop-filter: blur(var(--ds-space-1, 0.25rem));
+    animation: ds-backdrop-in var(--ds-duration-spatial, 250ms) var(--ds-ease-effects, ease-out);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  @include reduced-motion {
+    &[open],
+    &::backdrop {
+      animation: none;
+    }
+  }
+}
+
+dialog .btn-close {
+  position: absolute;
+  inset-block-start: var(--ds-space-2);
+  inset-inline-end: var(--ds-space-2);
+  font-size: var(--ds-icon-size-md);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-4);
+  padding-block: var(--ds-space-4);
+  padding-inline: var(--dialog-padding);
+  border-block-end: var(--ds-border-width) solid var(--ds-color-outline-variant);
+}
+
+.modal-title {
+  margin: 0;
+  color: var(--dialog-color, var(--ds-color-on-surface));
+  @include type(title, lg);
+}
+
+.modal-body {
+  flex: 1 1 auto;
+  min-block-size: 0; // Autorise le corps à rétrécir pour défiler dans la modale
+  overflow-y: auto;
+  padding-block: var(--dialog-padding);
+  padding-inline: var(--dialog-padding);
+  color: var(--ds-color-on-surface-variant);
+  @include type(body, md);
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ds-space-2);
+  padding-block: var(--ds-space-4);
+  padding-inline: var(--dialog-padding);
+  border-block-start: var(--ds-border-width) solid var(--ds-color-outline-variant);
+}
+
+@keyframes ds-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--ds-space-5)) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ds-backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

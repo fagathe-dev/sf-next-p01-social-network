@@ -1,0 +1,32 @@
+{% extends '@CorePhp/layout.html.twig' %}
+
+{% block content %}
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'h1',
+    content: 'Nouveau message'
+  } only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'p',
+    content: 'Bonjour <strong>' ~ (dto.recipientName|e) ~ '</strong>, <strong>' ~ (dto.senderName|e) ~ '</strong> vous a écrit :'
+  } only %}
+
+  {% if dto.excerpt %}
+    {% include '@CorePhp/components/_text.html.twig' with {
+      level: 'p',
+      color: '#525266',
+      content: '« ' ~ (dto.excerpt|e) ~ ' »'
+    } only %}
+  {% endif %}
+
+  {% include '@CorePhp/components/_section.html.twig' with {
+    align: 'center',
+    padding: '24px 0',
+    content: include('@CorePhp/components/_button.html.twig', {
+      url: dto.conversationUrl,
+      label: 'Lire la conversation',
+      bg_color: '#4B3FD8',
+      text_color: '#ffffff'
+    }, with_context = false)
+  } only %}
+{% endblock %}

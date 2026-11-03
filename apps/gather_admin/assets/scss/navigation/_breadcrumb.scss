@@ -1,0 +1,50 @@
+// ==========================================================================
+// Component: Breadcrumb (navigation/_breadcrumb.scss)
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  color: var(--ds-color-on-surface-variant);
+  @include type(body, md);
+
+  // Séparateur décoratif
+  & + &::before {
+    content: '/';
+    color: var(--ds-color-outline);
+  }
+
+  &.active {
+    color: var(--ds-color-on-surface);
+    font-weight: var(--ds-font-weight-medium);
+  }
+}
+
+.breadcrumb-item a {
+  border-radius: var(--ds-radius-xs);
+  color: inherit;
+  text-decoration: none;
+  transition: effects(color);
+
+  &:hover {
+    color: var(--ds-color-primary);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}

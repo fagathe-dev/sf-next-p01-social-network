@@ -1,0 +1,8 @@
+// Structure de page : grille (container, row, col), footer et layouts
+@forward 'container';
+@forward 'row';
+@forward 'col';
+@forward 'footer';
+@forward 'app';
+@forward 'auth';
+@forward 'dashboard';

@@ -1,0 +1,50 @@
+// ==========================================================================
+// Layout : Col (layout/_col.scss)
+// --------------------------------------------------------------------------
+// Grille de 12 colonnes. La rangée espace les colonnes avec gap : une
+// colonne de n/12 vaut n/12 de (100 % + gouttière), moins une gouttière.
+// ==========================================================================
+
+@use 'sass:math';
+@use '../abstracts' as *;
+
+$_columns: 12;
+
+@function _col-width($n) {
+  @return calc((100% + var(--row-gutter-x, 0px)) * #{math.div($n, $_columns)} - var(--row-gutter-x, 0px));
+}
+
+@function _col-offset($n) {
+  @return calc((100% + var(--row-gutter-x, 0px)) * #{math.div($n, $_columns)});
+}
+
+@include responsive using ($infix) {
+  .col#{$infix} {
+    flex: 1 0 0%;
+  }
+
+  .col#{$infix}-auto {
+    flex: 0 0 auto;
+    inline-size: auto;
+  }
+
+  @for $n from 1 through $_columns {
+    .col#{$infix}-#{$n} {
+      flex: 0 0 auto;
+      inline-size: _col-width($n);
+    }
+  }
+
+  // Décalages : 0 à 11 (le 0 sert à annuler un décalage au breakpoint)
+  @if $infix != '' {
+    .offset#{$infix}-0 {
+      margin-inline-start: 0;
+    }
+  }
+
+  @for $n from 1 through $_columns - 1 {
+    .offset#{$infix}-#{$n} {
+      margin-inline-start: _col-offset($n);
+    }
+  }
+}

@@ -1,0 +1,30 @@
+// ==========================================================================
+// Utilities : CSS Grid (utilities/_grid.scss)
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+$_columns: 12;
+
+.grid {
+  display: grid;
+  gap: var(--ds-space-4);
+}
+
+@include responsive using ($infix) {
+  @for $n from 1 through $_columns {
+    .grid-cols#{$infix}-#{$n} {
+      grid-template-columns: repeat(#{$n}, minmax(0, 1fr));
+    }
+  }
+
+  @for $n from 1 through $_columns {
+    .col-span#{$infix}-#{$n} {
+      grid-column: span #{$n} / span #{$n};
+    }
+  }
+
+  .col-span#{$infix}-full {
+    grid-column: 1 / -1;
+  }
+}

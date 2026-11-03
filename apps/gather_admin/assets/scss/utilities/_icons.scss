@@ -1,0 +1,50 @@
+// ==========================================================================
+// Utilities : Icônes (utilities/_icons.scss)
+// --------------------------------------------------------------------------
+// Harmonise les polices d'icônes MDI, Boxicons, Line Awesome et Remix :
+// centrées, proportionnelles au texte parent et de la couleur du texte.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.mdi,
+.bx,
+.la,
+.las,
+.lar,
+.lab,
+[class^='ri-'],
+[class*=' ri-'] {
+  --icon-size: 1.15em;
+
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  font-size: var(--icon-size);
+  line-height: 1 !important;
+  vertical-align: middle;
+}
+
+// Échelle de tailles
+@each $name, $value in $icon-sizes {
+  .icon-#{$name} {
+    --icon-size: var(--ds-icon-size-#{$name});
+
+    font-size: var(--icon-size) !important;
+  }
+}
+
+.icon-spin {
+  animation: ds-icon-spin 2s linear infinite;
+
+  @include reduced-motion {
+    animation: none;
+  }
+}
+
+@keyframes ds-icon-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

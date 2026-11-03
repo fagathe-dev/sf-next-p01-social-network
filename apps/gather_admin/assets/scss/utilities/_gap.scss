@@ -1,0 +1,26 @@
+// ==========================================================================
+// Utilities : Gap (utilities/_gap.scss)
+// --------------------------------------------------------------------------
+// gap, row-gap et column-gap sur l'échelle d'espacement, avec les alias
+// .gap-x-* (column-gap) et .gap-y-* (row-gap).
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+$_properties: (
+  'gap': gap,
+  'row-gap': row-gap,
+  'column-gap': column-gap,
+  'gap-x': column-gap,
+  'gap-y': row-gap,
+);
+
+@include responsive using ($infix) {
+  @each $prefix, $property in $_properties {
+    @each $key, $value in $spacing {
+      .#{$prefix}#{$infix}-#{$key} {
+        #{$property}: var(--ds-space-#{$key}) !important;
+      }
+    }
+  }
+}

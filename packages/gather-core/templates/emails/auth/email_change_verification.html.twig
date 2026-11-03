@@ -1,0 +1,49 @@
+{% extends '@CorePhp/layout.html.twig' %}
+
+{% block content %}
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'h1',
+    content: 'Confirmez votre nouvelle adresse e-mail'
+  } only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'p',
+    content: 'Bonjour <strong>' ~ (dto.recipientName|e) ~ '</strong>,'
+  } only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'p',
+    content: 'Vous avez demandé à associer l\'adresse <strong>' ~ (dto.newEmail|e) ~ '</strong> à votre compte. Cliquez sur le bouton ci-dessous pour valider le changement :'
+  } only %}
+
+  {% include '@CorePhp/components/_section.html.twig' with {
+    align: 'center',
+    padding: '24px 0',
+    content: include('@CorePhp/components/_button.html.twig', {
+      url: dto.confirmationUrl,
+      label: 'Confirmer ma nouvelle adresse',
+      bg_color: '#0f172b',
+      text_color: '#ffffff'
+    }, with_context = false)
+  } only %}
+
+  {% include '@CorePhp/components/_alert.html.twig' with {
+    type: 'info',
+    title: 'Lien temporaire',
+    content: 'Ce lien expire dans <strong>' ~ (dto.ttlHours|e) ~ ' heures</strong>. Votre adresse actuelle reste active tant que le changement n\'est pas confirmé.'
+  } only %}
+
+  {% include '@CorePhp/components/_divider.html.twig' only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'small',
+    color: '#64748b',
+    content: 'Lien direct : ' ~ (dto.confirmationUrl|e)
+  } only %}
+
+  {% include '@CorePhp/components/_text.html.twig' with {
+    level: 'small',
+    color: '#64748b',
+    content: 'Si vous n\'êtes pas à l\'origine de cette demande, ignorez cet e-mail : votre adresse actuelle ne sera pas modifiée.'
+  } only %}
+{% endblock %}

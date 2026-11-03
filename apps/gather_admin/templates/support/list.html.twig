@@ -1,0 +1,78 @@
+{% extends 'layouts/dashboard.html.twig' %}
+{% import 'fragments/_macros.html.twig' as ui %}
+
+{% block title %}Support{% endblock %}
+
+{% block content %}
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ path('admin_home') }}">Back-office</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Console de support</li>
+    </ol>
+  </nav>
+  <h1 class="h3 mb-0">Console de support</h1>
+</div>
+
+<form class="row g-3 align-items-end" method="get">
+  <div class="col-12 col-sm-auto">
+    <label class="form-label" for="filter-status">Statut</label>
+    <select class="form-select" id="filter-status" name="status">
+      <option value="">Tous</option>
+      {% for item in statuses %}<option value="{{ item.value }}" {{ filters.status == item ? 'selected' }}>{{ ui.statusLabel(item.value) }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-12 col-sm-auto">
+    <label class="form-label" for="filter-priority">Priorité</label>
+    <select class="form-select" id="filter-priority" name="priority">
+      <option value="">Toutes</option>
+      {% for item in priorities %}<option value="{{ item.value }}" {{ filters.priority == item ? 'selected' }}>{{ ui.statusLabel(item.value) }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-12 col-sm-auto">
+    <label class="form-label" for="filter-category">Catégorie</label>
+    <select class="form-select" id="filter-category" name="category">
+      <option value="">Toutes</option>
+      {% for item in categories %}<option value="{{ item.value }}" {{ filters.category == item ? 'selected' }}>{{ ui.statusLabel(item.value) }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-12 col-sm-auto">
+    <button type="submit" class="btn btn-outline-secondary">Filtrer</button>
+  </div>
+</form>
+
+<div class="card">
+<div class="card-body">
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th scope="col">Référence</th>
+        <th scope="col">Sujet</th>
+        <th scope="col">Membre</th>
+        <th scope="col">Catégorie</th>
+        <th scope="col">Priorité</th>
+        <th scope="col">Statut</th>
+        <th scope="col">Mis à jour</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ticket in tickets %}
+        <tr>
+          <td class="text-nowrap"><a href="{{ path('admin_support_show', {id: ticket.id}) }}">{{ ticket.reference }}</a></td>
+          <td class="text-break">{{ ticket.subject }}</td>
+          <td>{{ ticket.user ? '@' ~ ticket.user.username : ticket.guestEmail ~ ' (visiteur)' }}</td>
+          <td>{{ ui.statusLabel(ticket.category.value) }}</td>
+          <td>{{ ui.statusBadge(ticket.priority.value) }}</td>
+          <td>{{ ui.statusBadge(ticket.status.value) }}</td>
+          <td class="text-nowrap">{{ ticket.updatedAt|date('d/m/Y H:i') }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="7">Aucun ticket.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+</div>
+{% endblock %}

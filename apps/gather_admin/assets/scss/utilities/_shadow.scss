@@ -1,0 +1,30 @@
+// ==========================================================================
+// Utilities : Shadow (utilities/_shadow.scss)
+// --------------------------------------------------------------------------
+// À réserver aux cartes (déjà dotées d'une ombre douce) et aux éléments
+// flottants : ailleurs, la profondeur d'un élément dans le flux passe par sa
+// surface (.bg-surface-container-*).
+// ==========================================================================
+
+.shadow-sm {
+  box-shadow: var(--ds-shadow-sm) !important;
+}
+
+.shadow,
+.shadow-md {
+  box-shadow: var(--ds-shadow-md) !important;
+}
+
+.shadow-lg,
+.shadow-elevated {
+  box-shadow: var(--ds-shadow-lg) !important;
+}
+
+.shadow-inset,
+.shadow-inset-hover:hover {
+  box-shadow: var(--ds-shadow-inset) !important;
+}
+
+.shadow-none {
+  box-shadow: none !important;
+}

@@ -1,0 +1,114 @@
+// ==========================================================================
+// Component: Floating Labels (forms/_form-floating.scss)
+// --------------------------------------------------------------------------
+// Le placeholder natif est masqué : le label sert d'indication tant que le
+// champ est vide, puis remonte au focus ou dès qu'une valeur est saisie.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+// --------------------------------------------------------------------------
+// Variante classique (champ outlined de 56px)
+// --------------------------------------------------------------------------
+.form-floating {
+  position: relative;
+}
+
+.form-floating > :is(.form-control, .form-select) {
+  --input-height: var(--ds-control-height-xl);
+
+  block-size: var(--input-height);
+  padding-block: var(--ds-space-6) var(--ds-space-2);
+
+  &::placeholder {
+    color: transparent;
+  }
+}
+
+.form-floating > label {
+  position: absolute;
+  inset: 0;
+  padding-block: var(--ds-space-4);
+  padding-inline: var(--ds-space-4);
+  overflow: hidden;
+  border: var(--ds-border-width) solid transparent; // Même boîte que le champ
+  color: var(--ds-color-on-surface-variant);
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+  transform-origin: 0 0;
+  transition:
+    effects(color),
+    spatial(transform);
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select ~ label {
+  transform: scale(0.85) translateY(calc(var(--ds-space-2) * -1)) translateX(var(--ds-space-0_5));
+}
+
+.form-floating > :is(.form-control, .form-select):focus ~ label {
+  color: var(--ds-color-primary);
+}
+
+// --------------------------------------------------------------------------
+// Variante « flushed » : simple ligne, l'indicateur actif remplace l'anneau
+// --------------------------------------------------------------------------
+.form-floating-flushed {
+  position: relative;
+}
+
+.form-floating-flushed > :is(.form-control, .form-select) {
+  --input-height: var(--ds-control-height-lg);
+  --input-px: 0;
+  --input-radius: 0;
+  --input-bg: transparent;
+  --input-shadow: none;
+
+  block-size: var(--input-height);
+  padding-block: var(--ds-space-4) var(--ds-space-1);
+  border-width: 0 0 var(--ds-border-width);
+
+  &::placeholder {
+    color: transparent;
+  }
+
+  // Indicateur actif : soulignement épais, remplacement visible de l'outline
+  &:focus-visible {
+    outline: none;
+    border-block-end-width: var(--ds-border-width-thick);
+  }
+}
+
+.form-floating-flushed > label {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  padding-block: var(--ds-space-4) var(--ds-space-1);
+  color: var(--ds-color-on-surface-variant);
+  font-weight: var(--ds-font-weight-regular);
+  pointer-events: none;
+  transform-origin: 0 0;
+  transition:
+    effects(color),
+    spatial(transform);
+}
+
+.form-floating-flushed > .form-control:focus ~ label,
+.form-floating-flushed > .form-control:not(:placeholder-shown) ~ label,
+.form-floating-flushed > .form-select ~ label {
+  transform: scale(0.8) translateY(calc(var(--ds-space-4) * -1));
+}
+
+.form-floating-flushed > :is(.form-control, .form-select):focus ~ label {
+  color: var(--ds-color-primary);
+}
+
+@include reduced-motion {
+  .form-floating > label,
+  .form-floating-flushed > label {
+    transition: effects(color);
+  }
+}

@@ -1,0 +1,217 @@
+// ==========================================================================
+// Utilities : Text (utilities/_text.scss)
+// ==========================================================================
+
+@use 'sass:map';
+@use '../abstracts' as *;
+
+// --------------------------------------------------------------------------
+// Alignement (logique : start / end suivent le sens d'écriture)
+// --------------------------------------------------------------------------
+@include responsive using ($infix) {
+  @each $value in start, end, center {
+    .text#{$infix}-#{$value} {
+      text-align: $value !important;
+    }
+  }
+}
+
+.text-justify {
+  text-align: justify !important;
+}
+
+// --------------------------------------------------------------------------
+// Retour à la ligne, casse, décoration
+// --------------------------------------------------------------------------
+.text-wrap {
+  white-space: normal !important;
+}
+
+.text-nowrap {
+  white-space: nowrap !important;
+}
+
+.text-break {
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
+}
+
+@each $value in lowercase, uppercase, capitalize {
+  .text-#{$value} {
+    text-transform: $value !important;
+  }
+}
+
+@each $value in none, underline, line-through {
+  .text-decoration-#{$value} {
+    text-decoration: $value !important;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Graisse, style, famille
+// --------------------------------------------------------------------------
+$_font-weights: (
+  'light': 300,
+  'lighter': lighter,
+  'normal': var(--ds-font-weight-regular),
+  'medium': var(--ds-font-weight-medium),
+  'semibold': var(--ds-font-weight-semibold),
+  'bold': var(--ds-font-weight-bold),
+  'bolder': bolder,
+);
+
+@each $name, $value in $_font-weights {
+  .fw-#{$name} {
+    font-weight: $value !important;
+  }
+}
+
+.fst-normal {
+  font-style: normal !important;
+}
+
+.fst-italic {
+  font-style: italic !important;
+}
+
+.font-monospace,
+.text-monospace {
+  font-family: var(--ds-font-mono) !important;
+}
+
+// --------------------------------------------------------------------------
+// Tailles : .fs-1 à .fs-6 suivent les titres h1 à h6
+// --------------------------------------------------------------------------
+$_font-sizes: (
+  '1': var(--ds-text-display-sm),
+  '2': var(--ds-text-headline-lg),
+  '3': var(--ds-text-headline-md),
+  '4': var(--ds-text-headline-sm),
+  '5': var(--ds-text-title-lg),
+  '6': var(--ds-text-body-lg),
+);
+
+@each $name, $value in $_font-sizes {
+  .fs-#{$name} {
+    font-size: $value !important;
+  }
+}
+
+// Rôles typographiques M3 complets : .text-{rôle}-{taille}
+@each $role, $config in $type-scale {
+  @each $size, $value in map.get($config, 'sizes') {
+    .text-#{$role}-#{$size} {
+      font-size: var(--ds-text-#{$role}-#{$size}) !important;
+      font-weight: var(--ds-font-weight-#{map.get($config, 'weight')}) !important;
+      line-height: var(--ds-line-height-#{$role}) !important;
+      letter-spacing: var(--ds-letter-spacing-#{$role}) !important;
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// Interlignage
+// --------------------------------------------------------------------------
+$_line-heights: (
+  '1': var(--ds-line-height-none),
+  'sm': var(--ds-line-height-tight),
+  'base': var(--ds-line-height-normal),
+  'lg': var(--ds-line-height-loose),
+);
+
+@each $name, $value in $_line-heights {
+  .lh-#{$name} {
+    line-height: $value !important;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Couleurs
+// --------------------------------------------------------------------------
+@each $role, $token in $roles {
+  .text-#{$role} {
+    color: role-color($role) !important;
+  }
+
+  // Texte posé sur le conteneur du rôle (.bg-{rôle}-subtle)
+  .text-#{$role}-emphasis,
+  .text-#{$role}-dark {
+    color: role-color($role, 'on-container') !important;
+  }
+}
+
+.text-body {
+  color: var(--ds-color-on-surface) !important;
+}
+
+// Texte secondaire : couleur dédiée, jamais une opacité réduite
+.text-muted {
+  color: var(--ds-color-on-surface-variant) !important;
+}
+
+.text-light {
+  color: var(--ds-color-inverse-on-surface) !important;
+}
+
+.text-dark {
+  color: var(--ds-color-inverse-surface) !important;
+}
+
+.text-white {
+  color: var(--ds-color-white) !important;
+}
+
+.text-black-50 {
+  color: color-mix(in srgb, var(--ds-color-black) 50%, transparent) !important;
+}
+
+.text-white-50 {
+  color: color-mix(in srgb, var(--ds-color-white) 50%, transparent) !important;
+}
+
+.text-reset {
+  color: inherit !important;
+}
+
+// Largeur de lecture optimale
+.text-reading {
+  max-inline-size: var(--ds-size-reading) !important;
+}
+
+// --------------------------------------------------------------------------
+// Interaction
+// --------------------------------------------------------------------------
+@each $value in all, auto, none {
+  .user-select-#{$value} {
+    -webkit-user-select: $value !important;
+    user-select: $value !important;
+  }
+}
+
+.pe-none {
+  pointer-events: none !important;
+}
+
+.pe-auto {
+  pointer-events: auto !important;
+}
+
+// --------------------------------------------------------------------------
+// Listes
+// --------------------------------------------------------------------------
+.list-unstyled,
+.list-inline {
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.list-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-2);
+}
+
+.list-inline-item {
+  display: inline-block;
+}

@@ -1,0 +1,82 @@
+{% extends 'layouts/dashboard.html.twig' %}
+{% import 'fragments/_macros.html.twig' as ui %}
+
+{% block title %}Journal de modération{% endblock %}
+
+{% block content %}
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ path('admin_home') }}">Back-office</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Journal de modération</li>
+    </ol>
+  </nav>
+  <h1 class="h3 mb-0">Journal de modération</h1>
+</div>
+
+<form class="row g-3 align-items-end" method="get">
+  <div class="col-12 col-sm-6 col-lg">
+    <label class="form-label" for="filter-moderator">Modérateur</label>
+    <input class="form-control" id="filter-moderator" type="text" name="moderator" value="{{ filters.moderator ?? '' }}">
+  </div>
+  <div class="col-12 col-sm-6 col-lg">
+    <label class="form-label" for="filter-target">Utilisateur ciblé</label>
+    <input class="form-control" id="filter-target" type="text" name="target" value="{{ filters.target ?? '' }}">
+  </div>
+  <div class="col-12 col-sm-6 col-lg">
+    <label class="form-label" for="filter-action">Action</label>
+    <select class="form-select" id="filter-action" name="action">
+      <option value="">Toutes</option>
+      {% for action in actions %}
+        <option value="{{ action.value }}" {{ (filters.action ?? '') == action.value ? 'selected' }}>{{ ui.statusLabel(action.value) }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-6 col-sm-3 col-lg">
+    <label class="form-label" for="filter-from">Du</label>
+    <input class="form-control" id="filter-from" type="date" name="from" value="{{ filters.from ?? '' }}">
+  </div>
+  <div class="col-6 col-sm-3 col-lg">
+    <label class="form-label" for="filter-to">Au</label>
+    <input class="form-control" id="filter-to" type="date" name="to" value="{{ filters.to ?? '' }}">
+  </div>
+  <div class="col-12 col-lg-auto">
+    <button type="submit" class="btn btn-outline-secondary">Filtrer</button>
+  </div>
+</form>
+
+<div class="card">
+<div class="card-body">
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Modérateur</th>
+        <th scope="col">Cible</th>
+        <th scope="col">Action</th>
+        <th scope="col">Durée</th>
+        <th scope="col">Motif</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for log in result.items %}
+        <tr>
+          <td class="text-nowrap">{{ log.createdAt|date('d/m/Y H:i') }}</td>
+          <td>@{{ log.moderator.username }}</td>
+          <td>{{ log.targetUser ? '@' ~ log.targetUser.username : '—' }}</td>
+          <td>{{ ui.statusBadge(log.actionType.value) }}</td>
+          <td class="text-nowrap">{{ log.durationDays ? log.durationDays ~ ' j' : '—' }}</td>
+          <td class="text-break">{{ log.reason }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6">Aucune entrée.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+</div>
+
+{{ ui.pagination('admin_logs_moderation', filters|filter((value, key) => key != 'page'), result.page, result.hasMore) }}
+{% endblock %}

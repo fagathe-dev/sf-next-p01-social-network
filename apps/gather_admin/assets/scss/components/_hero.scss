@@ -1,0 +1,55 @@
+// ==========================================================================
+// Component: Hero (components/_hero.scss)
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.hero {
+  // 1. Component Tokens
+  --hero-bg: var(--ds-color-primary-container);
+  --hero-color: var(--ds-color-on-primary-container);
+
+  // 2. Box Model
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 50vh;
+  padding-block: var(--ds-space-16);
+  padding-inline: var(--ds-space-8);
+  overflow: hidden;
+  border-radius: var(--ds-radius-lg);
+
+  // 3. Couleurs
+  background-color: var(--hero-bg);
+  color: var(--hero-color);
+  text-align: center;
+}
+
+// Variante image : voile sombre pour garder le texte lisible sur toute photo
+.hero-has-bg {
+  --hero-color: var(--ds-color-on-scrim);
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-color: color-mix(in srgb, var(--ds-color-scrim) 60%, transparent);
+  }
+}
+
+.hero-has-bg .hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-title {
+  margin-block: 0 var(--ds-space-4);
+  color: inherit;
+  @include type(display, lg);
+}

@@ -1,0 +1,54 @@
+// ==========================================================================
+// Utilities : Sizing & Position (utilities/_sizing.scss)
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+// Largeur et hauteur
+@each $value in 25, 50, 75, 100 {
+  .w-#{$value} {
+    inline-size: #{$value * 1%} !important;
+  }
+
+  .h-#{$value} {
+    block-size: #{$value * 1%} !important;
+  }
+}
+
+.w-auto {
+  inline-size: auto !important;
+}
+
+.h-auto {
+  block-size: auto !important;
+}
+
+.mw-100 {
+  max-inline-size: 100% !important;
+}
+
+.mh-100 {
+  max-block-size: 100% !important;
+}
+
+// Position
+@each $value in static, relative, absolute, fixed, sticky {
+  .position-#{$value} {
+    position: $value !important;
+  }
+}
+
+$_insets: (
+  'top': inset-block-start,
+  'bottom': inset-block-end,
+  'start': inset-inline-start,
+  'end': inset-inline-end,
+);
+
+@each $name, $property in $_insets {
+  @each $value in 0, 50, 100 {
+    .#{$name}-#{$value} {
+      #{$property}: #{$value * 1%} !important;
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{% extends 'layouts/dashboard.html.twig' %}
+{% import 'fragments/_macros.html.twig' as ui %}
+
+{% block title %}Logs applicatifs{% endblock %}
+
+{% macro files(nodes, date, current) %}
+  {% for node in nodes %}
+    {% if node.type == 'folder' %}
+      <li class="list-group-item"><span class="fw-semibold">{{ node.name }}</span></li>
+      {{ _self.files(node.children, date, current) }}
+    {% else %}
+      <li class="list-group-item{{ current == node.path ? ' active' }}" {{ current == node.path ? 'aria-current="true"' }}>
+        <a class="text-break" href="{{ path('admin_logs_system', {date: date, file: node.path}) }}">{{ node.name }}</a>
+      </li>
+    {% endif %}
+  {% endfor %}
+{% endmacro %}
+
+{% block content %}
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ path('admin_home') }}">Back-office</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Logs applicatifs</li>
+    </ol>
+  </nav>
+  <h1 class="h3 mb-0">Logs applicatifs</h1>
+</div>
+
+<div class="row g-4">
+  <div class="col-12 col-lg-4">
+    {% if tree is empty %}
+      <div class="box">Aucun journal disponible.</div>
+    {% else %}
+      <div class="accordion">
+        {% for day in tree %}
+          {% set isOpen = day.date == date or (loop.first and date == '') %}
+          <div class="accordion-item">
+            <button type="button" class="accordion-button" data-ds-toggle="accordion" data-ds-target="#log-day-{{ loop.index }}" aria-expanded="{{ isOpen ? 'true' : 'false' }}" aria-controls="log-day-{{ loop.index }}">
+              {{ day.date }} ({{ day.count }}) <i class="ri-arrow-down-s-line accordion-icon"></i>
+            </button>
+            <div id="log-day-{{ loop.index }}" class="accordion-collapse collapse{{ isOpen ? ' show' }}">
+              <div class="accordion-body">
+                <ul class="list-group list-group-flush">
+                  {{ _self.files(day.items, day.date, file) }}
+                </ul>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="col-12 col-lg-8">
+    {% if file %}
+      <form class="row g-3 align-items-end mb-4" method="get">
+        <input type="hidden" name="date" value="{{ date }}">
+        <input type="hidden" name="file" value="{{ file }}">
+        <div class="col-12 col-sm-auto">
+          <label class="form-label" for="filter-level">Niveau</label>
+          <select class="form-select" id="filter-level" name="level">
+            <option value="">Tous</option>
+            {% for item in ['critical', 'error', 'warning', 'info'] %}
+              <option value="{{ item }}" {{ level == item ? 'selected' }}>{{ item }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-12 col-sm">
+          <label class="form-label" for="filter-search">Recherche</label>
+          <input class="form-control" id="filter-search" type="text" name="q" value="{{ search }}">
+        </div>
+        <div class="col-12 col-sm-auto">
+          <button type="submit" class="btn btn-outline-secondary">Filtrer</button>
+        </div>
+      </form>
+
+      <div class="d-flex flex-column gap-4">
+        {% for entry in entries %}
+          {% set role = {critical: 'danger', error: 'danger', warning: 'warning', info: 'info'}[entry.level ?? ''] ?? 'secondary' %}
+          <article class="card">
+            <div class="card-body">
+              <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                <span class="badge badge-{{ role }}">{{ entry.level ?? '?' }}</span>
+                <span class="text-muted small">{{ entry.timestamp ?? '' }}</span>
+              </div>
+              <p class="mb-3 text-break">{{ entry.content.message ?? '' }}</p>
+              <button type="button" class="btn btn-ghost-secondary btn-sm" data-ds-toggle="collapse" data-ds-target="#log-entry-{{ loop.index }}" aria-expanded="false" aria-controls="log-entry-{{ loop.index }}">Détails</button>
+              <div class="collapse mt-3" id="log-entry-{{ loop.index }}">
+                {% include 'fragments/components/_code-block.html.twig' with {
+                  code: entry|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES')),
+                  language: 'json',
+                  id: 'log-code-' ~ loop.index
+                } only %}
+              </div>
+            </div>
+          </article>
+        {% else %}
+          <div class="box">Aucune entrée pour ces critères.</div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="box">Choisissez un fichier de journal.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+// ==========================================================================
+// Utilities : Display, Visibility & Overflow (utilities/_display.scss)
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+$_displays: none, inline, inline-block, block, grid, inline-grid, table, table-row, table-cell, flex, inline-flex;
+
+@include responsive using ($infix) {
+  @each $value in $_displays {
+    .d#{$infix}-#{$value} {
+      display: $value !important;
+    }
+  }
+}
+
+@media print {
+  @each $value in $_displays {
+    .d-print-#{$value} {
+      display: $value !important;
+    }
+  }
+}
+
+.visible {
+  visibility: visible !important;
+}
+
+.invisible {
+  visibility: hidden !important;
+}
+
+.visually-hidden {
+  @include visually-hidden;
+}
+
+@each $value in auto, hidden, visible, scroll {
+  .overflow-#{$value} {
+    overflow: $value !important;
+  }
+
+  .overflow-x-#{$value} {
+    overflow-x: $value !important;
+  }
+
+  .overflow-y-#{$value} {
+    overflow-y: $value !important;
+  }
+}

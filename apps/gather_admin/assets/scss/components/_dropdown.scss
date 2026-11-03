@@ -1,0 +1,178 @@
+// ==========================================================================
+// Component: Dropdown (components/_dropdown.scss)
+// --------------------------------------------------------------------------
+// Le JS (data-ds-toggle="dropdown") bascule aria-expanded sur le
+// déclencheur et .show sur le .dropdown-menu qui le suit.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  cursor: pointer;
+
+  // Chevron autonome (masque SVG coloré avec currentColor)
+  &::after {
+    content: '';
+    display: inline-block;
+    inline-size: 1.25em;
+    block-size: 1.25em;
+    background-color: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 15.0006L7.75732 10.758L9.17154 9.34375L12 12.1722L14.8284 9.34375L16.2426 10.758L12 15.0006Z'/%3E%3C/svg%3E") center / contain no-repeat;
+    transition: spatial(transform);
+  }
+
+  &[aria-expanded='true']::after {
+    transform: rotate(-180deg);
+  }
+
+  @include reduced-motion {
+    &::after {
+      transition: none;
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// Menu flottant : surface container-high, seule une ombre le détache du flux
+// --------------------------------------------------------------------------
+.dropdown-menu {
+  // 1. Component Tokens
+  --dropdown-bg: var(--ds-surface);
+  --dropdown-color: var(--ds-color-on-surface);
+  --dropdown-radius: var(--ds-radius-md);
+  --dropdown-padding: var(--ds-space-2);
+  --dropdown-width: var(--ds-size-menu);
+  // Rayon concentrique : rayon du menu moins son padding
+  --dropdown-item-radius: max(0px, calc(var(--dropdown-radius) - var(--dropdown-padding)));
+
+  // 2. Box Model
+  position: absolute;
+  inset-block-start: calc(100% + var(--ds-space-2));
+  inset-inline-start: 0;
+  z-index: var(--ds-z-dropdown);
+  display: none;
+  min-inline-size: var(--dropdown-width);
+  max-block-size: var(--ds-size-menu-max-height);
+  margin: 0;
+  padding: var(--dropdown-padding);
+  overflow-x: hidden;
+  overflow-y: auto;
+  list-style: none;
+  border: var(--ds-border-width) solid var(--ds-color-outline-variant);
+  border-radius: var(--dropdown-radius);
+
+  // 3. Couleurs
+  background-color: var(--dropdown-bg);
+  color: var(--dropdown-color);
+  box-shadow: var(--ds-shadow-lg);
+
+  &.show {
+    display: block;
+    animation: ds-dropdown-in var(--ds-duration-spatial) var(--ds-ease-spatial);
+  }
+
+  @include reduced-motion {
+    &.show {
+      animation: none;
+    }
+  }
+}
+
+.dropdown-menu-end {
+  inset-inline: auto 0;
+}
+
+.dropdown-header {
+  padding-block: var(--ds-space-2);
+  padding-inline: var(--ds-space-4);
+  color: var(--ds-color-on-surface-variant);
+  @include type(label, md);
+}
+
+.dropdown-item {
+  // 1. Component Tokens
+  --dropdown-item-bg: transparent;
+  --dropdown-item-color: var(--dropdown-color, var(--ds-color-on-surface));
+
+  // 2. Box Model
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  min-block-size: var(--ds-control-height-md);
+  padding-inline: var(--ds-space-3);
+  border-radius: var(--dropdown-item-radius, var(--ds-radius-xs));
+
+  // 3. Typographie & Couleurs
+  background-color: var(--dropdown-item-bg);
+  color: var(--dropdown-item-color);
+  font-size: var(--dropdown-item-font-size, var(--ds-text-body-md));
+  font-weight: var(--dropdown-item-font-weight, var(--ds-font-weight-medium));
+  text-decoration: none;
+  transition: effects(background-color, color);
+
+  &:hover {
+    background-color: state-layer(var(--dropdown-item-bg), var(--dropdown-item-color));
+    color: var(--dropdown-item-color);
+    text-decoration: none;
+  }
+
+  &:active {
+    background-color: state-layer(var(--dropdown-item-bg), var(--dropdown-item-color), 'pressed');
+  }
+
+  &:focus-visible {
+    @include focus-ring(calc(var(--ds-focus-ring-width) * -1));
+  }
+
+  &.active {
+    --dropdown-item-bg: var(--ds-color-primary-container);
+    --dropdown-item-color: var(--ds-color-on-primary-container);
+  }
+
+  &.disabled,
+  &:disabled,
+  &[aria-disabled='true'] {
+    --dropdown-item-color: #{disabled-content()};
+
+    pointer-events: none;
+  }
+}
+
+// Icône de tête : discrète, prend la couleur primaire au survol
+.dropdown-item > i {
+  color: var(--ds-color-on-surface-variant);
+  font-size: var(--ds-icon-size-md);
+  transition: effects(color);
+}
+
+.dropdown-item:hover > i {
+  color: var(--ds-color-primary);
+}
+
+.dropdown-divider {
+  block-size: 0;
+  margin-block: var(--ds-space-2);
+  overflow: hidden;
+  border: 0;
+  border-block-start: var(--ds-border-width) solid var(--ds-color-outline-variant);
+}
+
+@keyframes ds-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--ds-space-2) * -1));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

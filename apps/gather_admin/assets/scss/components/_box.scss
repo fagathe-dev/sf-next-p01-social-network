@@ -1,0 +1,47 @@
+// ==========================================================================
+// Component: Box (components/_box.scss)
+// --------------------------------------------------------------------------
+// Panneau de contenu : séparé de la page par sa surface (containment).
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.box {
+  // 1. Component Tokens
+  --box-bg: var(--ds-surface-container);
+  --box-color: var(--ds-color-on-surface);
+  --box-title-color: var(--ds-color-on-surface);
+  --box-padding: var(--ds-space-6);
+
+  // 2. Box Model
+  inline-size: 100%;
+  padding: var(--box-padding);
+  border-radius: var(--ds-radius-md);
+
+  // 3. Couleurs
+  background-color: var(--box-bg);
+  color: var(--box-color);
+
+  @include media-up(md) {
+    --box-padding: var(--ds-space-8);
+  }
+}
+
+.box-title {
+  margin-block: 0 var(--ds-space-3);
+  color: var(--box-title-color);
+  @include type(title, md);
+}
+
+.box > :last-child {
+  margin-block-end: 0;
+}
+
+// Variantes (surcharge uniquement des Component Tokens)
+@each $role, $token in $roles {
+  .box-#{$role} {
+    --box-bg: #{role-color($role, 'container')};
+    --box-color: #{role-color($role, 'on-container')};
+    --box-title-color: #{role-color($role, 'on-container')};
+  }
+}

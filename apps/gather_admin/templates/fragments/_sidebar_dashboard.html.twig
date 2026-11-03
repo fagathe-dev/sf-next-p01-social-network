@@ -1,0 +1,22 @@
+{% set route = app.request.attributes.get('_route') %}
+<aside class="dashboard-sidebar" aria-label="Navigation principale">
+  <header class="sidebar-header">
+    <a class="sidebar-brand fw-bold fs-5 d-flex align-items-center gap-2" href="{{ path('admin_home') }}"><span class="avatar avatar-sm"><img src="{{ asset(app_logo) }}" alt=""></span> {{ app_name }}</a>
+  </header>
+  <nav class="sidebar-body">
+    <div class="sidebar-section" role="group" aria-labelledby="sidebar-section-moderation">
+      <span class="sidebar-section-title" id="sidebar-section-moderation">Modération</span>
+      <a href="{{ path('admin_reports') }}" class="sidebar-link{{ route starts with 'admin_report' ? ' active' }}" {{ route starts with 'admin_report' ? 'aria-current="page"' }}><i class="ri-flag-line"></i> Signalements</a>
+      <a href="{{ path('admin_logs_moderation') }}" class="sidebar-link{{ route == 'admin_logs_moderation' ? ' active' }}" {{ route == 'admin_logs_moderation' ? 'aria-current="page"' }}><i class="ri-history-line"></i> Journal de modération</a>
+    </div>
+    <div class="sidebar-section" role="group" aria-labelledby="sidebar-section-support">
+      <span class="sidebar-section-title" id="sidebar-section-support">Assistance</span>
+      <a href="{{ path('admin_support_list') }}" class="sidebar-link{{ route starts with 'admin_support' ? ' active' }}" {{ route starts with 'admin_support' ? 'aria-current="page"' }}><i class="ri-customer-service-2-line"></i> Support</a>
+    </div>
+    <div class="sidebar-section" role="group" aria-labelledby="sidebar-section-system">
+      <span class="sidebar-section-title" id="sidebar-section-system">Système</span>
+      <a href="{{ path('admin_logs_system') }}" class="sidebar-link{{ route == 'admin_logs_system' ? ' active' }}" {{ route == 'admin_logs_system' ? 'aria-current="page"' }}><i class="ri-file-list-3-line"></i> Logs applicatifs</a>
+      <a href="{{ path('admin_emails_list') }}" class="sidebar-link{{ route starts with 'admin_emails' ? ' active' }}" {{ route starts with 'admin_emails' ? 'aria-current="page"' }}><i class="ri-mail-line"></i> Templates d'e-mails</a>
+    </div>
+  </nav>
+</aside>

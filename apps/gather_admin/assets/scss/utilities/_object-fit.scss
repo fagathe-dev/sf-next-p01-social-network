@@ -1,0 +1,21 @@
+// ==========================================================================
+// Utilities : Object Fit (utilities/_object-fit.scss)
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+$_values: (
+  'contain': contain,
+  'cover': cover,
+  'fill': fill,
+  'scale': scale-down,
+  'none': none,
+);
+
+@include responsive using ($infix) {
+  @each $name, $value in $_values {
+    .object-fit#{$infix}-#{$name} {
+      object-fit: $value !important;
+    }
+  }
+}

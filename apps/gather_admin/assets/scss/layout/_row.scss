@@ -1,0 +1,45 @@
+// ==========================================================================
+// Layout : Row (layout/_row.scss)
+// --------------------------------------------------------------------------
+// Rangée flex dont les gouttières passent par gap (aucune marge négative).
+// Les colonnes (_col.scss) lisent --row-gutter-x pour calculer leur largeur.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.row {
+  --row-gutter-x: var(--ds-space-6);
+  --row-gutter-y: 0;
+
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--row-gutter-x);
+  row-gap: var(--row-gutter-y);
+}
+
+.row > * {
+  flex-shrink: 0;
+  max-inline-size: 100%;
+}
+
+// --------------------------------------------------------------------------
+// Gouttières : .g-* (deux axes), .gx-* (horizontal), .gy-* (vertical)
+// --------------------------------------------------------------------------
+$_gutter-keys: ('0', '1', '2', '3', '4', '5', '6', '8', '10', '12');
+
+@include responsive using ($infix) {
+  @each $key in $_gutter-keys {
+    .g#{$infix}-#{$key} {
+      --row-gutter-x: var(--ds-space-#{$key});
+      --row-gutter-y: var(--ds-space-#{$key});
+    }
+
+    .gx#{$infix}-#{$key} {
+      --row-gutter-x: var(--ds-space-#{$key});
+    }
+
+    .gy#{$infix}-#{$key} {
+      --row-gutter-y: var(--ds-space-#{$key});
+    }
+  }
+}

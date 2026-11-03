@@ -1,0 +1,284 @@
+// ==========================================================================
+// System Tokens — niveau 2 (foundation/_tokens.scss)
+// --------------------------------------------------------------------------
+// Variables CSS sémantiques globales, générées depuis les primitives.
+// Déclarées dans :root (thème clair) et surchargées dans
+// [data-ui-theme='dark']. Ce sont les seules valeurs que les composants
+// ont le droit de lire.
+// ==========================================================================
+
+@use 'sass:color';
+@use 'sass:map';
+@use 'sass:meta';
+@use '../abstracts' as *;
+
+// --------------------------------------------------------------------------
+// Rôles de couleur → palette
+// --------------------------------------------------------------------------
+$color-roles: (
+  'primary': 'indigo',
+  'secondary': 'neutral',
+  'tertiary': 'slate',
+  'success': 'green',
+  'warning': 'amber',
+  'info': 'blue',
+  'error': 'red',
+);
+
+// Ton de chaque emplacement, par thème. Tous les couples rôle / on-rôle et
+// conteneur / on-conteneur dépassent 4.5:1 (WCAG AA texte courant).
+$role-tones: (
+  'light': (
+    'base': 600,
+    'container': 100,
+    'on-container': 900,
+  ),
+  'dark': (
+    'base': 300,
+    'on': 950,
+    'container': 800,
+    'on-container': 100,
+  ),
+);
+
+// Exceptions : green-600 et amber-600 ne donnent que 3.3:1 sous du blanc ;
+// taupe et slate, peu saturées, ont besoin d'un conteneur plus marqué.
+$role-tone-overrides: (
+  'light': (
+    'secondary': (
+      'container': 200,
+    ),
+    'tertiary': (
+      'container': 200,
+    ),
+    'success': (
+      'base': 700,
+    ),
+    'warning': (
+      'base': 700,
+    ),
+  ),
+  'dark': (),
+);
+
+$neutral: 'slate';
+
+@function _shade($palette, $tone) {
+  @return map.get($palettes, $palette, $tone);
+}
+
+@function _tone($role, $theme, $slot) {
+  $override: map.get($role-tone-overrides, $theme, $role, $slot);
+  $tone: $override or map.get($role-tones, $theme, $slot);
+
+  // En clair, le contenu posé sur un rôle plein est blanc
+  @if not $tone {
+    @return $white;
+  }
+
+  @return _shade(map.get($color-roles, $role), $tone);
+}
+
+@function _neutral($tone) {
+  @return _shade($neutral, $tone);
+}
+
+// Niveau intermédiaire entre deux tons neutres (échelle Tailwind trop grossière
+// pour 5 niveaux de surface)
+@function _neutral-between($from, $to) {
+  @return color.mix(_neutral($from), _neutral($to), 50%);
+}
+
+@mixin _color-roles($theme) {
+  @each $role, $palette in $color-roles {
+    --ds-color-#{$role}: #{_tone($role, $theme, 'base')};
+    --ds-color-on-#{$role}: #{_tone($role, $theme, 'on')};
+    --ds-color-#{$role}-container: #{_tone($role, $theme, 'container')};
+    --ds-color-on-#{$role}-container: #{_tone($role, $theme, 'on-container')};
+  }
+}
+
+// ==========================================================================
+// THÈME CLAIR (défaut)
+// ==========================================================================
+:root {
+  color-scheme: light;
+
+  // --- Rôles de couleur (primary, secondary, tertiary, success, warning, info, error)
+  @include _color-roles('light');
+
+  // --- Surfaces (Tonal Elevation : plus le niveau monte, plus il fonce)
+  --ds-surface: #{_neutral(50)};
+  --ds-surface-container-low: #{_neutral-between(50, 100)};
+  --ds-surface-container: #{_neutral(100)};
+  --ds-surface-container-high: #{_neutral-between(100, 200)};
+  --ds-surface-container-highest: #{_neutral(200)};
+  --ds-color-on-surface: #{_neutral(900)};
+  --ds-color-on-surface-variant: #{_neutral(600)};
+
+  // --- Bordures : outline >= 3:1 sur toutes les surfaces (fonctionnelle),
+  // outline-variant pour les séparateurs décoratifs
+  --ds-color-outline: #{_neutral(500)};
+  --ds-color-outline-variant: #{_neutral(300)};
+
+  // --- Surfaces inversées, voile et ombre
+  --ds-color-inverse-surface: #{_neutral(800)};
+  --ds-color-inverse-on-surface: #{_neutral(100)};
+  --ds-color-scrim: #{$black};
+  --ds-color-on-scrim: #{$white};
+  --ds-color-shadow: #{_neutral(900)};
+
+  // --- Couleurs statiques (identiques dans les deux thèmes)
+  --ds-color-white: #{$white};
+  --ds-color-black: #{$black};
+
+  // --- Blocs de code (toujours sombres, coloration One Dark)
+  --ds-code-surface: #{_neutral(900)};
+  --ds-code-on-surface: #{map.get($syntax, 'text')};
+  --ds-code-comment: #{_neutral(400)};
+  --ds-code-tag: #{map.get($syntax, 'red')};
+  --ds-code-attr: #{map.get($syntax, 'orange')};
+  --ds-code-string: #{map.get($syntax, 'green')};
+  --ds-code-property: #{map.get($syntax, 'cyan')};
+  --ds-code-keyword: #{map.get($syntax, 'purple')};
+
+  // --- Ombres : contrôles (xs), cartes (sm) et éléments flottants (md, lg)
+  --ds-shadow-xs: 0 1px 2px
+    color-mix(in srgb, var(--ds-color-shadow) 5%, transparent);
+  --ds-shadow-sm:
+    0 1px 2px color-mix(in srgb, var(--ds-color-shadow) 8%, transparent),
+    0 1px 3px 1px color-mix(in srgb, var(--ds-color-shadow) 4%, transparent);
+  --ds-shadow-md:
+    0 4px 8px 3px color-mix(in srgb, var(--ds-color-shadow) 6%, transparent),
+    0 1px 3px color-mix(in srgb, var(--ds-color-shadow) 10%, transparent);
+  --ds-shadow-lg:
+    0 8px 12px 6px color-mix(in srgb, var(--ds-color-shadow) 8%, transparent),
+    0 4px 4px color-mix(in srgb, var(--ds-color-shadow) 10%, transparent);
+  --ds-shadow-inset: inset 0 2px 4px
+    color-mix(in srgb, var(--ds-color-shadow) 6%, transparent);
+
+  // --- Typographie
+  @each $name, $value in $font-families {
+    --ds-font-#{$name}: #{meta.inspect($value)};
+  }
+
+  @each $name, $value in $font-weights {
+    --ds-font-weight-#{$name}: #{$value};
+  }
+
+  @each $role, $config in $type-scale {
+    @each $size, $value in map.get($config, 'sizes') {
+      --ds-text-#{$role}-#{$size}: #{$value};
+    }
+
+    --ds-line-height-#{$role}: #{map.get($config, 'line-height')};
+    --ds-letter-spacing-#{$role}: #{map.get($config, 'letter-spacing')};
+  }
+
+  @each $name, $value in $line-heights {
+    --ds-line-height-#{$name}: #{$value};
+  }
+
+  --ds-letter-spacing-caps: #{$letter-spacing-caps};
+
+  @each $name, $value in $icon-sizes {
+    --ds-icon-size-#{$name}: #{$value};
+  }
+
+  // --- Espacements (grille de 4px)
+  @each $name, $value in $spacing {
+    --ds-space-#{$name}: #{$value};
+  }
+
+  // --- Formes
+  @each $name, $value in $radii {
+    --ds-radius-#{$name}: #{$value};
+  }
+
+  --ds-border-width: #{map.get($border-widths, 'default')};
+  --ds-border-width-thick: #{map.get($border-widths, 'thick')};
+
+  // --- Anneau de focus : 2px primary, décalé de 2px
+  --ds-focus-ring-width: #{map.get($border-widths, 'thick')};
+  --ds-focus-ring-offset: #{map.get($border-widths, 'thick')};
+  --ds-focus-ring-color: var(--ds-color-primary);
+
+  // --- Tailles et densité
+  @each $name, $value in $control-heights {
+    --ds-control-height-#{$name}: #{$value};
+  }
+
+  --ds-touch-target: #{$touch-target};
+
+  @each $name, $value in $layout-sizes {
+    --ds-size-#{$name}: #{$value};
+  }
+
+  @each $name, $value in $container-widths {
+    --ds-container-#{$name}: #{$value};
+  }
+
+  // --- États interactifs
+  @each $name, $value in $state-layers {
+    --ds-state-#{$name}: #{$value};
+  }
+
+  --ds-opacity-disabled: #{$opacity-disabled};
+
+  // --- Motion
+  @each $name, $value in $easings {
+    --ds-ease-#{$name}: #{$value};
+  }
+
+  @each $name, $value in $durations {
+    --ds-duration-#{$name}: #{$value};
+  }
+
+  // --- Profondeur
+  @each $name, $value in $z-index {
+    --ds-z-#{$name}: #{$value};
+  }
+}
+
+// ==========================================================================
+// THÈME SOMBRE
+// ==========================================================================
+[data-ui-theme='dark'] {
+  color-scheme: dark;
+
+  @include _color-roles('dark');
+
+  // Surfaces : plus le niveau monte, plus il s'éclaircit
+  --ds-surface: #{_neutral(950)};
+  --ds-surface-container-low: #{_neutral-between(950, 900)};
+  --ds-surface-container: #{_neutral(900)};
+  --ds-surface-container-high: #{_neutral-between(900, 800)};
+  --ds-surface-container-highest: #{_neutral(800)};
+  --ds-color-on-surface: #{_neutral(100)};
+  --ds-color-on-surface-variant: #{_neutral(400)};
+
+  --ds-color-outline: #{_neutral(500)};
+  --ds-color-outline-variant: #{_neutral(700)};
+
+  --ds-color-inverse-surface: #{_neutral(100)};
+  --ds-color-inverse-on-surface: #{_neutral(800)};
+  --ds-color-shadow: #{$black};
+
+  --ds-code-surface: #{_neutral(950)};
+
+  // Une ombre noire disparaît sur fond quasi noir : on ajoute un liseré
+  // clair très translucide qui détache l'élément flottant
+  --ds-shadow-xs: 0 1px 2px
+    color-mix(in srgb, var(--ds-color-shadow) 40%, transparent);
+  --ds-shadow-sm:
+    0 1px 3px color-mix(in srgb, var(--ds-color-shadow) 50%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--ds-color-on-surface) 4%, transparent);
+  --ds-shadow-md:
+    0 4px 12px color-mix(in srgb, var(--ds-color-shadow) 55%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--ds-color-on-surface) 6%, transparent);
+  --ds-shadow-lg:
+    0 12px 24px color-mix(in srgb, var(--ds-color-shadow) 65%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--ds-color-on-surface) 8%, transparent);
+  --ds-shadow-inset: inset 0 2px 4px
+    color-mix(in srgb, var(--ds-color-shadow) 40%, transparent);
+}

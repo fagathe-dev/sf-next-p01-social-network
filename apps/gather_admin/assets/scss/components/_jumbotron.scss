@@ -1,0 +1,58 @@
+// ==========================================================================
+// Component: Jumbotron (components/_jumbotron.scss)
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.jumbotron {
+  // 1. Component Tokens
+  --jumbotron-bg: var(--ds-surface-container);
+  --jumbotron-color: var(--ds-color-on-surface);
+  --jumbotron-py: var(--ds-space-16);
+  --jumbotron-px: var(--ds-space-8);
+
+  // 2. Box Model
+  padding-block: var(--jumbotron-py);
+  padding-inline: var(--jumbotron-px);
+  border-radius: var(--ds-radius-lg);
+
+  // 3. Couleurs
+  background-color: var(--jumbotron-bg);
+  color: var(--jumbotron-color);
+
+  @include media-up(md) {
+    --jumbotron-py: var(--ds-space-24);
+    --jumbotron-px: var(--ds-space-16);
+  }
+}
+
+// Variante bord à bord : le fond s'étend sur toute la largeur de la fenêtre
+// sans provoquer de défilement horizontal (pas de 100vw)
+.jumbotron-fluid {
+  border-radius: 0;
+  box-shadow: 0 0 0 100vmax var(--jumbotron-bg);
+  clip-path: inset(0 -100vmax);
+}
+
+.jumbotron-title {
+  margin-block: 0 var(--ds-space-4);
+  color: inherit;
+  @include type(display, md);
+}
+
+.jumbotron-lead {
+  margin-block: 0 var(--ds-space-6);
+  max-inline-size: var(--ds-size-reading);
+  color: inherit;
+  font-size: var(--ds-text-title-lg);
+  font-weight: var(--ds-font-weight-regular);
+  line-height: var(--ds-line-height-body);
+}
+
+// Variantes (surcharge uniquement des Component Tokens)
+@each $role, $token in $roles {
+  .jumbotron-#{$role} {
+    --jumbotron-bg: #{role-color($role, 'container')};
+    --jumbotron-color: #{role-color($role, 'on-container')};
+  }
+}

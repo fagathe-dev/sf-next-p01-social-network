@@ -1,0 +1,63 @@
+// ==========================================================================
+// Reset et éléments de base (foundation/_reset.scss)
+// --------------------------------------------------------------------------
+// Les sélecteurs d'éléments passent par :where() quand un composant doit
+// pouvoir les surcharger sans lutte de spécificité (liens, contrôles).
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--ds-surface);
+  color: var(--ds-color-on-surface);
+  font-family: var(--ds-font-sans);
+  @include type(body, lg);
+  -webkit-font-smoothing: antialiased;
+}
+
+:where(button, input, select, textarea) {
+  font: inherit;
+}
+
+// L'attribut hidden l'emporte sur le display des composants (.form-control…)
+[hidden] {
+  display: none !important;
+}
+
+:where(img, svg, video, canvas) {
+  vertical-align: middle;
+}
+
+:where(p) {
+  margin-block: 0 var(--ds-space-4);
+}
+
+:where(hr) {
+  margin-block: var(--ds-space-4);
+  border: 0;
+  border-block-start: var(--ds-border-width) solid var(--ds-color-outline-variant);
+}
+
+// Liens : couleur primaire, soulignés au survol
+:where(a) {
+  color: var(--ds-color-primary);
+  text-decoration: none;
+  text-underline-offset: 0.15em;
+  transition: effects(color);
+}
+
+:where(a:hover) {
+  text-decoration: underline;
+}
+
+:where(a:focus-visible) {
+  border-radius: var(--ds-radius-xs);
+  @include focus-ring;
+}

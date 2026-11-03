@@ -1,0 +1,126 @@
+// ==========================================================================
+// Component: Nav — onglets, pilules, verticale (navigation/_nav.scss)
+// --------------------------------------------------------------------------
+// .nav-link lit ses tokens sur le conteneur : .nav-tabs, .nav-pills,
+// .navbar-nav ou .footer-links n'ont qu'à les redéfinir.
+// ==========================================================================
+
+@use '../abstracts' as *;
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-link {
+  // 1. Component Tokens (valeurs par défaut si le conteneur n'en fournit pas)
+  --nav-link-current-bg: var(--nav-link-bg, transparent);
+  --nav-link-current-color: var(
+    --nav-link-color,
+    var(--ds-color-on-surface-variant)
+  );
+
+  // 2. Box Model
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  min-block-size: var(--nav-link-height, var(--ds-control-height-md));
+  padding-inline: var(--nav-link-px, var(--ds-space-4));
+  border: none;
+  border-radius: var(--nav-link-radius, var(--ds-radius-sm));
+
+  // 3. Typographie & Couleurs
+  background-color: var(--nav-link-current-bg);
+  color: var(--nav-link-current-color);
+  @include type(label, lg);
+  font-weight: var(--ds-font-weight-medium);
+  text-decoration: none;
+
+  // 4. Motion
+  transition: effects(background-color, color);
+
+  // 5. États interactifs
+  &:hover {
+    background-color: state-layer(
+      var(--nav-link-current-bg),
+      var(--nav-link-current-color)
+    );
+    color: var(--nav-link-current-color);
+    text-decoration: none;
+  }
+
+  &:not(.active):hover {
+    color: var(--nav-link-hover-color, var(--ds-color-on-surface));
+  }
+
+  &:active {
+    background-color: state-layer(
+      var(--nav-link-current-bg),
+      var(--nav-link-current-color),
+      'pressed'
+    );
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &.active {
+    --nav-link-current-bg: var(
+      --nav-link-active-bg,
+      var(--ds-color-primary-container)
+    );
+    --nav-link-current-color: var(
+      --nav-link-active-color,
+      var(--ds-color-on-primary-container)
+    );
+  }
+
+  &.disabled {
+    color: disabled-content();
+    pointer-events: none;
+  }
+
+  &:is(a) {
+    text-decoration: none;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+// Onglets : posés sur un filet, l'onglet actif prend la couleur primaire
+.nav-tabs {
+  --nav-link-active-bg: var(--ds-surface-container-low);
+  --nav-link-active-color: var(--ds-color-primary);
+  --nav-link-radius: var(--ds-radius-md);
+
+  gap: var(--ds-space-1);
+  border-block-end: var(--ds-border-width) solid var(--ds-color-outline-variant);
+}
+
+.nav-tabs .nav-link {
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+}
+
+// Pilules : l'indicateur actif est plein
+.nav-pills {
+  --nav-link-active-bg: var(--ds-color-primary);
+  --nav-link-active-color: var(--ds-color-on-primary);
+  --nav-link-radius: var(--ds-radius-md);
+}
+
+// Navigation verticale
+.nav-vertical {
+  flex-direction: column;
+}
+
+.nav-vertical .nav-link {
+  justify-content: flex-start;
+  inline-size: 100%;
+}
