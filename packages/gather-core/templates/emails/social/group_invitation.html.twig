@@ -11,14 +11,8 @@
     content: '<strong>' ~ (dto.inviterName|e) ~ '</strong> vous invite à rejoindre la communauté <strong>' ~ (dto.groupName|e) ~ '</strong>.'
   } only %}
 
-  {% include '@CorePhp/components/_section.html.twig' with {
-    align: 'center',
-    padding: '24px 0',
-    content: include('@CorePhp/components/_button.html.twig', {
-      url: dto.groupUrl,
-      label: 'Voir la communauté',
-      bg_color: '#4B3FD8',
-      text_color: '#ffffff'
-    }, with_context = false)
+  {% include '@CorePhp/components/_button.html.twig' with {
+    url: dto.groupUrl,
+    label: 'Voir la communauté'
   } only %}
 {% endblock %}

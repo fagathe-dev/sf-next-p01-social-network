@@ -14,19 +14,13 @@
   {% if dto.excerpt %}
     {% include '@CorePhp/components/_text.html.twig' with {
       level: 'p',
-      color: '#525266',
+      tone: 'muted',
       content: '« ' ~ (dto.excerpt|e) ~ ' »'
     } only %}
   {% endif %}
 
-  {% include '@CorePhp/components/_section.html.twig' with {
-    align: 'center',
-    padding: '24px 0',
-    content: include('@CorePhp/components/_button.html.twig', {
-      url: dto.conversationUrl,
-      label: 'Lire la conversation',
-      bg_color: '#4B3FD8',
-      text_color: '#ffffff'
-    }, with_context = false)
+  {% include '@CorePhp/components/_button.html.twig' with {
+    url: dto.conversationUrl,
+    label: 'Lire la conversation'
   } only %}
 {% endblock %}

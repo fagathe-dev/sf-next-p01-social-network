@@ -17,22 +17,15 @@
     content: 'Vous pouvez dès à présent accéder à votre espace personnel en cliquant sur le bouton ci-dessous :'
   } only %}
 
-  {% include '@CorePhp/components/_section.html.twig' with {
-    align: 'center',
-    padding: '20px 0',
-    content: include('@CorePhp/components/_button.html.twig', {
-      url: dto.loginUrl,
-      label: 'Se connecter à mon espace',
-      bg_color: '#0f172b',
-      text_color: '#ffffff'
-    }, with_context = false)
+  {% include '@CorePhp/components/_button.html.twig' with {
+    url: dto.loginUrl,
+    label: 'Se connecter à mon espace'
   } only %}
 
   {% include '@CorePhp/components/_divider.html.twig' only %}
 
   {% include '@CorePhp/components/_text.html.twig' with {
     level: 'small',
-    color: '#64748b',
     content: 'Si le bouton ne s\'affiche pas correctement, copiez ce lien dans votre navigateur : ' ~ (dto.loginUrl|e)
   } only %}
 {% endblock %}

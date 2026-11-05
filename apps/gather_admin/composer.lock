@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d63db6f37aa91760647628c65f011832",
+    "content-hash": "cface4c5fe173060e076dc6a1839e378",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -1193,16 +1193,16 @@
         },
         {
             "name": "fagathe-dev/core-php",
-            "version": "v1.1.3",
+            "version": "v1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fagathe-dev/core-php.git",
-                "reference": "99aa6b153b96ba82c3939fd81d1f59bde8464911"
+                "reference": "ba632dcec90637be7a1671832fbad80e045a8769"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fagathe-dev/core-php/zipball/99aa6b153b96ba82c3939fd81d1f59bde8464911",
-                "reference": "99aa6b153b96ba82c3939fd81d1f59bde8464911",
+                "url": "https://api.github.com/repos/fagathe-dev/core-php/zipball/ba632dcec90637be7a1671832fbad80e045a8769",
+                "reference": "ba632dcec90637be7a1671832fbad80e045a8769",
                 "shasum": ""
             },
             "require": {
@@ -1250,23 +1250,23 @@
             },
             "description": "Librairie PHP Core et Sécurité",
             "support": {
-                "source": "https://github.com/fagathe-dev/core-php/tree/v1.1.3",
+                "source": "https://github.com/fagathe-dev/core-php/tree/v1.1.4",
                 "issues": "https://github.com/fagathe-dev/core-php/issues"
             },
-            "time": "2026-10-26T18:40:07+00:00"
+            "time": "2026-11-03T20:57:43+00:00"
         },
         {
             "name": "fagathe/gather-core",
-            "version": "dev-main",
+            "version": "dev-master",
             "dist": {
                 "type": "path",
                 "url": "../../packages/gather-core",
-                "reference": "7d4ed11ef420126365741fdf72703e8cbc337903"
+                "reference": "a912461d6ebb10a3a70aaa73e66a0ed6d3b3650b"
             },
             "require": {
                 "doctrine/doctrine-bundle": "^3.3",
                 "doctrine/orm": "^3.7",
-                "fagathe-dev/core-php": ">=1.1.3",
+                "fagathe-dev/core-php": ">=1.1.4",
                 "php": ">=8.4",
                 "symfony/cache": "^8.1",
                 "symfony/clock": "^8.1",

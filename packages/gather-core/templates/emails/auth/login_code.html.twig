@@ -16,12 +16,8 @@
     content: 'Utilisez le code à usage unique ci-dessous pour vous connecter sans mot de passe :'
   } only %}
 
-  {% include '@CorePhp/components/_box.html.twig' with {
-    content: '<div style="font-size: 32px; font-weight: 700; letter-spacing: 8px; text-align: center; font-family: monospace; color: #0f172b;">' ~ (dto.code|e) ~ '</div>',
-    background: '#f8fafc',
-    padding: '24px',
-    radius: '12px',
-    custom_style: 'margin: 24px 0; border: 1px solid #e2e8f0;'
+  {% include '@CorePhp/components/_code.html.twig' with {
+    code: dto.code
   } only %}
 
   {% include '@CorePhp/components/_alert.html.twig' with {
@@ -34,7 +30,6 @@
 
   {% include '@CorePhp/components/_text.html.twig' with {
     level: 'small',
-    color: '#64748b',
     content: 'Si vous n\'êtes pas à l\'origine de cette demande, ignorez cet e-mail : personne ne peut se connecter sans ce code.'
   } only %}
 {% endblock %}

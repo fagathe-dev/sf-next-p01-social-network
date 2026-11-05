@@ -42,24 +42,14 @@
     content: '🔐 Vos informations de connexion'
   } only %}
 
-  {% set row_label = 'padding: 10px 0; color: #6c757d; width: 160px; vertical-align: top;' %}
-  {% set row_value = 'padding: 10px 0; color: #212529;' %}
-
-  {% include '@CorePhp/components/_card.html.twig' with {
-    padding: '20px',
-    custom_style: 'border: 1px solid #e2e8f0; border-radius: 8px;',
-    content: '<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="font-size: 14px;">'
-      ~ '<tr><td style="' ~ row_label ~ '"><strong>Nom d\'utilisateur</strong></td>'
-      ~ '<td style="' ~ row_value ~ ' font-family: monospace; font-size: 15px;">' ~ (dto.username|e) ~ '</td></tr>'
-      ~ '<tr><td style="' ~ row_label ~ '"><strong>Adresse e-mail</strong></td>'
-      ~ '<td style="' ~ row_value ~ '">' ~ (dto.recipientEmail|e) ~ '</td></tr>'
-      ~ '<tr><td style="' ~ row_label ~ '"><strong>Mot de passe</strong></td>'
-      ~ '<td style="' ~ row_value ~ ' color: #dc3545; font-family: monospace; font-size: 15px; font-weight: bold; background: #fff3cd; padding-left: 10px; border-radius: 4px;">' ~ (dto.plainPassword|e) ~ '</td></tr>'
-      ~ '<tr><td style="' ~ row_label ~ '"><strong>Rôle</strong></td>'
-      ~ '<td style="' ~ row_value ~ ' color: #0d6efd; font-weight: 600;">' ~ (dto.roleLabel|e) ~ '</td></tr>'
-      ~ '<tr><td style="' ~ row_label ~ '"><strong>Date de création</strong></td>'
-      ~ '<td style="' ~ row_value ~ '">' ~ (dto.createdAt|date('d/m/Y à H:i')) ~ '</td></tr>'
-      ~ '</table>'
+  {% include '@CorePhp/components/_details.html.twig' with {
+    rows: [
+      { label: 'Nom d\'utilisateur', value: dto.username, mono: true },
+      { label: 'Adresse e-mail', value: dto.recipientEmail },
+      { label: 'Mot de passe', value: dto.plainPassword, mono: true, tone: 'danger' },
+      { label: 'Rôle', value: dto.roleLabel, tone: 'primary' },
+      { label: 'Date de création', value: dto.createdAt|date('d/m/Y à H:i') }
+    ]
   } only %}
 
   {% include '@CorePhp/components/_text.html.twig' with {
@@ -72,20 +62,13 @@
     content: 'Avant votre première connexion, remplacez ce mot de passe provisoire par un mot de passe personnel :'
   } only %}
 
-  {% include '@CorePhp/components/_section.html.twig' with {
-    align: 'center',
-    padding: '16px 0',
-    content: include('@CorePhp/components/_button.html.twig', {
-      url: dto.changePasswordUrl,
-      label: 'Changer mon mot de passe',
-      bg_color: '#198754',
-      text_color: '#ffffff'
-    }, with_context = false)
+  {% include '@CorePhp/components/_button.html.twig' with {
+    url: dto.changePasswordUrl,
+    label: 'Changer mon mot de passe'
   } only %}
 
   {% include '@CorePhp/components/_text.html.twig' with {
     level: 'small',
-    color: '#64748b',
     content: 'Ce lien est valable <strong>' ~ (dto.ttlHours|e) ~ ' heures</strong> et ne peut être utilisé qu\'une seule fois. Passé ce délai, utilisez « Mot de passe oublié ? » sur la page de connexion.'
   } only %}
 
@@ -94,15 +77,10 @@
     content: 'Une fois votre mot de passe modifié, connectez-vous :'
   } only %}
 
-  {% include '@CorePhp/components/_section.html.twig' with {
-    align: 'center',
-    padding: '16px 0',
-    content: include('@CorePhp/components/_button.html.twig', {
-      url: dto.loginUrl,
-      label: 'Se connecter',
-      bg_color: '#0f172b',
-      text_color: '#ffffff'
-    }, with_context = false)
+  {% include '@CorePhp/components/_button.html.twig' with {
+    url: dto.loginUrl,
+    label: 'Se connecter',
+    variant: 'outline'
   } only %}
 
   {% include '@CorePhp/components/_divider.html.twig' only %}
@@ -110,16 +88,15 @@
   {% include '@CorePhp/components/_alert.html.twig' with {
     type: 'warning',
     title: '🛡️ Rappel de sécurité',
-    content: '<ul style="margin: 10px 0; padding-left: 20px;">'
-      ~ '<li style="margin-bottom: 8px;">Ne partagez <strong>jamais</strong> vos identifiants</li>'
-      ~ '<li style="margin-bottom: 8px;">Choisissez un mot de passe fort (8 caractères minimum, majuscule, minuscule et chiffre)</li>'
-      ~ '<li style="margin-bottom: 8px;"><strong>Supprimez définitivement cet e-mail</strong> après avoir changé votre mot de passe</li>'
+    content: '<ul style="margin: 8px 0 0; padding-left: 20px;">'
+      ~ '<li style="padding-bottom: 4px;">Ne partagez <strong>jamais</strong> vos identifiants</li>'
+      ~ '<li style="padding-bottom: 4px;">Choisissez un mot de passe fort (8 caractères minimum, majuscule, minuscule et chiffre)</li>'
+      ~ '<li style="padding-bottom: 4px;"><strong>Supprimez définitivement cet e-mail</strong> après avoir changé votre mot de passe</li>'
       ~ '</ul>'
   } only %}
 
   {% include '@CorePhp/components/_text.html.twig' with {
     level: 'small',
-    color: '#64748b',
     content: 'Si vous n\'êtes pas à l\'origine de cette demande ou pensez avoir reçu cet e-mail par erreur, contactez immédiatement l\'équipe technique.'
   } only %}
 {% endblock %}
